@@ -1,3 +1,6 @@
+require 'tty-prompt'
+
+prompt = TTY::Prompt.new
 
 class User
 
@@ -27,26 +30,23 @@ class AdminUser < User
         super(username, password)
         @options = ["Add Code", "Edit Code", "Remove Code", "Search For Code", "Help", "Exit"]
     end
-
-    def chooseOption(input)
-        case input
-        when "Exit"
-            begin
-                Exit
-            rescue SystemExit
-                p "Goodbye"
-            end
-        end
-    end
 end
 
 def createAccount
     puts "Please create a username"
+end
+
 list_of_users = [
     GeneralUser.new("Steph", "pass"),
     GeneralUser.new("Ben", "password"),
     AdminUser.new("Daniel", "admin")
 ]
 
-loop do
-    puts "Do you have an account?"
+
+prompt.select('Please select an option:') do |menu|
+  
+    menu.choice 'Create an Account'
+    menu.choice 'Sign-In'
+    menu.choice 'Exit'
+  end
+
