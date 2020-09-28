@@ -17,13 +17,36 @@ end
 class GeneralUser < User
     def initialize(username, password)
         super(username, password)
-        @options = ["Search", "Favourites", "Help", "Exit"]
+        @options = ["Search For Code", "Favourites", "Help", "Exit"]
         @favourites = {}
     end
-
 end 
 
+class AdminUser < User
+    def initialize(username, password)
+        super(username, password)
+        @options = ["Add Code", "Edit Code", "Remove Code", "Search For Code", "Help", "Exit"]
+    end
+
+    def chooseOption(input)
+        case input
+        when "Exit"
+            begin
+                Exit
+            rescue SystemExit
+                p "Goodbye"
+            end
+        end
+    end
+end
+
+def createAccount
+    puts "Please create a username"
 list_of_users = [
-    GeneralUser.new("Daniel", "pass"),
-    GeneralUser.new("Ben", "password")
+    GeneralUser.new("Steph", "pass"),
+    GeneralUser.new("Ben", "password"),
+    AdminUser.new("Daniel", "admin")
 ]
+
+loop do
+    puts "Do you have an account?"
