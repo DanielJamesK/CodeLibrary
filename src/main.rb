@@ -18,6 +18,19 @@ class User
             puts "Options: "
             puts @options
     end
+
+    def exectuteOptions(input)
+        case input
+        when "Borrow"
+            borrow
+        when "Return"
+            puts "Run the Return Code"
+        when "Search"
+            puts "Run the Search Code"
+        else
+            puts "Invalid"
+        end
+    end
 end 
 
 class GeneralUser < User
@@ -75,141 +88,156 @@ pets = {title: " Image ", Description: " Grid Template Rows - Defines the rows o
 
 File.open("pets.yml", "w") { |file| file.write(pets.to_yaml) }
 
+list_of_users = [    
+    GeneralUser.new("Guest", "password"),
+    AdminUser.new("Admin", "password")
+]
 
-loop do
-    prompt = TTY::Prompt.new
-    display_options_menu = prompt.select('Please select an option:') do |menu|   
-        menu.choice 'Add Code'
-        menu.choice 'Edit Code'
-        menu.choice 'Remove Code'
-        menu.choice 'Search'
-        menu.choice 'Help'
-        menu.choice 'Exit'
-    end
-    
+puts "Please enter your username"
+input_username = gets.chomp
+puts "Enter your password"
+input_password = gets.chomp
+user = list_of_users.find { |user| user.username == input_username }
+if user.username == input_username && user.password == input_password
     loop do
-        case display_options_menu
-        when "Add Code"
-            puts "Please enter a code Title"
-            input_title = gets.chomp
-            puts "Please enter a code Description"
-            input_description = gets.chomp
-            puts "Please enter a code snippet"
-            input_snippet = gets.chomp
-            code = {title: input_title, description: input_description, code_snippet: input_snippet}
-            File.open("code.yml", "a") { |file|  file.write(code.to_yaml) }
-            break
-
-        when "Remove Code"
-            puts "Please enter the title of the code snippet you wish to remove"
-            remove_title = gets.chomp
-
-        when "Search"
         prompt = TTY::Prompt.new
-        search_options = prompt.select('Please select a category:') do |menu|
-            menu.choice 'Image Manipulation'
-            menu.choice 'Text Manipulation'
-            menu.choice 'Flexbox'
-            menu.choice 'Grid'
-            menu.choice 'Back'
+        display_options_menu = prompt.select('Please select an option:') do |menu|   
+            menu.choice 'Add Code'
+            menu.choice 'Edit Code'
+            menu.choice 'Remove Code'
+            menu.choice 'Search'
+            menu.choice 'Help'
             menu.choice 'Exit'
         end
-
-            case search_options
-            when "Image Manipulation"
-                system("clear")
-
-            puts"██╗███╗░░░███╗░█████╗░░██████╗░███████╗░██████╗"
-            puts"██║████╗░████║██╔══██╗██╔════╝░██╔════╝██╔════╝"
-            puts"██║██╔████╔██║███████║██║░░██╗░█████╗░░╚█████╗░"
-            puts"██║██║╚██╔╝██║██╔══██║██║░░╚██╗██╔══╝░░░╚═══██╗"
-            puts"██║██║░╚═╝░██║██║░░██║╚██████╔╝███████╗██████╔╝"
-            puts"╚═╝╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═════╝░\n\n"
-
-                image_table = TTY::Table.new(["Title","Description","Code Snippet"], 
-                [
-                    image_height,
-                    image_width,
-                    responsive_image,
-                    image_border,
-                    opacity,
-                    image_file = YAML.load(File.read("code.yml"))
-                ])
-                 puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
-                # image_file = YAML.dump(File.read("code.yml"))
-                # pp image_file
-                # puts image_file
-            when "Text Manipulation"
-                system("clear")
-
-                puts"████████╗███████╗██╗░░██╗████████╗"
-                puts"╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝"
-                puts"░░░██║░░░█████╗░░░╚███╔╝░░░░██║░░░"
-                puts"░░░██║░░░██╔══╝░░░██╔██╗░░░░██║░░░"
-                puts"░░░██║░░░███████╗██╔╝╚██╗░░░██║░░░"
-                puts"░░░╚═╝░░░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░\n\n"
-                text_table = TTY::Table.new(["Description","Code Snippet"], 
-                [
-                    font_size,
-                    font_weight,
-                    font_colour,
-                    font_family,
-                    font_style,
-                    responsive_font
-                ])
-                puts text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
-
-            when "Flexbox"
-                system("clear")
-                
-               puts"███████╗██╗░░░░░███████╗██╗░░██╗██████╗░░█████╗░██╗░░██╗"
-               puts"██╔════╝██║░░░░░██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗╚██╗██╔╝"
-               puts"█████╗░░██║░░░░░█████╗░░░╚███╔╝░██████╦╝██║░░██║░╚███╔╝░"
-               puts"██╔══╝░░██║░░░░░██╔══╝░░░██╔██╗░██╔══██╗██║░░██║░██╔██╗░"
-               puts"██║░░░░░███████╗███████╗██╔╝╚██╗██████╦╝╚█████╔╝██╔╝╚██╗"
-               puts"╚═╝░░░░░╚══════╝╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚═╝\n\n"
-                flexbox_table = TTY::Table.new(["Description","Code Snippet"], 
-                [
-                    flex_direction,
-                    flex_wrap,
-                    flex_flow,
-                    justify_content,
-                    align_items,
-                    order
-                ])
-                puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
-
-            when "Grid"
-                system("clear")
-                
-               puts"░██████╗░██████╗░██╗██████╗░"
-               puts"██╔════╝░██╔══██╗██║██╔══██╗"
-               puts"██║░░██╗░██████╔╝██║██║░░██║"
-               puts"██║░░╚██╗██╔══██╗██║██║░░██║"
-               puts"╚██████╔╝██║░░██║██║██████╔╝"
-               puts"░╚═════╝░╚═╝░░╚═╝╚═╝╚═════╝░\n\n"
-                grid_table = TTY::Table.new(["Description","Code Snippet"], 
-                [
-                    grid_template_columns,
-                    grid_template_rows,
-                    grid_column_grid_row,
-                    grid_template_areas,
-                ])
-                puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
-
-            when "Back"
-                system("clear")
+        
+        loop do
+            case display_options_menu
+            when "Add Code"
+                puts "Please enter a code Title"
+                input_title = gets.chomp
+                puts "Please enter a code Description"
+                input_description = gets.chomp
+                puts "Please enter a code snippet"
+                input_snippet = gets.chomp
+                code = {title: input_title, description: input_description, code_snippet: input_snippet}
+                File.open("code.yml", "a") { |file|  file.write(code.to_yaml) }
                 break
+    
+            when "Remove Code"
+                puts "Please enter the title of the code snippet you wish to remove"
+                remove_title = gets.chomp
+    
+            when "Search"
+            prompt = TTY::Prompt.new
+            search_options = prompt.select('Please select a category:') do |menu|
+                menu.choice 'Image Manipulation'
+                menu.choice 'Text Manipulation'
+                menu.choice 'Flexbox'
+                menu.choice 'Grid'
+                menu.choice 'Back'
+                menu.choice 'Exit'
+            end
+    
+                case search_options
+                when "Image Manipulation"
+                    system("clear")
+    
+                puts"██╗███╗░░░███╗░█████╗░░██████╗░███████╗░██████╗"
+                puts"██║████╗░████║██╔══██╗██╔════╝░██╔════╝██╔════╝"
+                puts"██║██╔████╔██║███████║██║░░██╗░█████╗░░╚█████╗░"
+                puts"██║██║╚██╔╝██║██╔══██║██║░░╚██╗██╔══╝░░░╚═══██╗"
+                puts"██║██║░╚═╝░██║██║░░██║╚██████╔╝███████╗██████╔╝"
+                puts"╚═╝╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═════╝░\n\n"
+    
+                    image_table = TTY::Table.new(["Title","Description","Code Snippet"], 
+                    [
+                        image_height,
+                        image_width,
+                        responsive_image,
+                        image_border,
+                        opacity,
+                        image_file = YAML.load(File.read("code.yml"))
+                    ])
+                     puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+                    # image_file = YAML.dump(File.read("code.yml"))
+                    # pp image_file
+                    # puts image_file
+                when "Text Manipulation"
+                    system("clear")
+    
+                    puts"████████╗███████╗██╗░░██╗████████╗"
+                    puts"╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝"
+                    puts"░░░██║░░░█████╗░░░╚███╔╝░░░░██║░░░"
+                    puts"░░░██║░░░██╔══╝░░░██╔██╗░░░░██║░░░"
+                    puts"░░░██║░░░███████╗██╔╝╚██╗░░░██║░░░"
+                    puts"░░░╚═╝░░░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░\n\n"
+                    text_table = TTY::Table.new(["Description","Code Snippet"], 
+                    [
+                        font_size,
+                        font_weight,
+                        font_colour,
+                        font_family,
+                        font_style,
+                        responsive_font
+                    ])
+                    puts text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+    
+                when "Flexbox"
+                    system("clear")
+                    
+                   puts"███████╗██╗░░░░░███████╗██╗░░██╗██████╗░░█████╗░██╗░░██╗"
+                   puts"██╔════╝██║░░░░░██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗╚██╗██╔╝"
+                   puts"█████╗░░██║░░░░░█████╗░░░╚███╔╝░██████╦╝██║░░██║░╚███╔╝░"
+                   puts"██╔══╝░░██║░░░░░██╔══╝░░░██╔██╗░██╔══██╗██║░░██║░██╔██╗░"
+                   puts"██║░░░░░███████╗███████╗██╔╝╚██╗██████╦╝╚█████╔╝██╔╝╚██╗"
+                   puts"╚═╝░░░░░╚══════╝╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚═╝\n\n"
+                    flexbox_table = TTY::Table.new(["Description","Code Snippet"], 
+                    [
+                        flex_direction,
+                        flex_wrap,
+                        flex_flow,
+                        justify_content,
+                        align_items,
+                        order
+                    ])
+                    puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+    
+                when "Grid"
+                    system("clear")
+                    
+                   puts"░██████╗░██████╗░██╗██████╗░"
+                   puts"██╔════╝░██╔══██╗██║██╔══██╗"
+                   puts"██║░░██╗░██████╔╝██║██║░░██║"
+                   puts"██║░░╚██╗██╔══██╗██║██║░░██║"
+                   puts"╚██████╔╝██║░░██║██║██████╔╝"
+                   puts"░╚═════╝░╚═╝░░╚═╝╚═╝╚═════╝░\n\n"
+                    grid_table = TTY::Table.new(["Description","Code Snippet"], 
+                    [
+                        grid_template_columns,
+                        grid_template_rows,
+                        grid_column_grid_row,
+                        grid_template_areas,
+                    ])
+                    puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+    
+                when "Back"
+                    system("clear")
+                    break
+                when "Exit"
+                    system("clear")
+                    exitProgram
+                end
             when "Exit"
                 system("clear")
                 exitProgram
             end
-        when "Exit"
-            system("clear")
-            exitProgram
         end
     end
+else
+    puts "incorrect"
 end
+
+
 
 puts "Goodbye"
 
