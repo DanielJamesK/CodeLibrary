@@ -97,11 +97,29 @@ prompt = TTY::Prompt.new
 
     case display_options_menu
     when "Search"
-        table = TTY::Table.new(["header1","header2"], [["a1", "a2"], ["b1", "b2"]])
-        puts table.render(:ascii)
+        prompt = TTY::Prompt.new
+        search_options = prompt.select('Please select an option:') do |menu|
+        
+            menu.choice 'Image Manipulation'
+            menu.choice 'Text Manipulation'
+            menu.choice 'Colours'
+            menu.choice 'Flexbox'
+            menu.choice 'Grid'
+        end
     end
     
-    
+    case search_options
+    when "Image Manipulation"
+        table = TTY::Table.new(["Description","Code Snippet"], 
+        [
+            [" Increase image height by a percentage or by pixel amount ", " height: %, height: px "], 
+            [" Increase image width by a percentage or by pixel amount ", " width: %, width: px "],
+            [" Responsive Image ", " width: 100%, height: auto "],
+            [" Image border, defines the width of the border, what type of border, is this case it is solid, and the colour ", " border: 5px solid black "],
+            [" Opacity, in the example the opacity is set to 50% ", " opacity: 0.5 "]
+        ])
+        puts table.render(:ascii)
+    end
 
 # list_of_users = []
 
