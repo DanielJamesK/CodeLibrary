@@ -103,7 +103,6 @@ loop do
         
             menu.choice 'Image Manipulation'
             menu.choice 'Text Manipulation'
-            menu.choice 'Colours'
             menu.choice 'Flexbox'
             menu.choice 'Grid'
             menu.choice 'Exit'
@@ -112,7 +111,8 @@ loop do
 
     case search_options
     when "Image Manipulation"
-        table = TTY::Table.new(["Description","Code Snippet"], 
+        system("clear")
+        image_table = TTY::Table.new(["Description","Code Snippet"], 
         [
             [" Increase image height by a percentage or by pixel amount ", " height: %, height: px "],
             [" Increase image width by a percentage or by pixel amount ", " width: %, width: px "],
@@ -120,11 +120,11 @@ loop do
             [" Image border, defines the width of the border, what type of border, is this case it is solid, and the colour ", " border: 5px solid black "],
             [" Opacity, in the example the opacity is set to 50% ", " opacity: 0.5 "]
         ])
-        puts table.render(:ascii)
+        puts image_table.render(:unicode, alignments: [:left, :left])
 
     when "Text Manipulation"
         system("clear")
-        table = TTY::Table.new(["Description","Code Snippet"], 
+        text_table = TTY::Table.new(["Description","Code Snippet"], 
         [
             [" Font Size ", " font-size: 16px, font-size: 1rem "],
             [" Font Weight ", " font-weight: bold, font-weight: 800 "],
@@ -133,9 +133,25 @@ loop do
             [" Font Style ", " font-style: normal, font-style: italic "],
             [" Responsive Font Size ", " font-size: 10vw "]
         ])
-        puts table.render(:ascii)
+        puts text_table.render(:unicode, alignments: [:left, :left])
+    when "Flexbox"
+        system("clear")
+        flexbox_table = TTY::Table.new(["Description","Code Snippet"], 
+        [
+            [" Flex Direction ", " flex-direction: row | row-reverse | column | column-reverse "],
+            [" Flex Wrap ", " flex-wrap: nowrap | wrap | wrap-reverse "],
+            [" Flex Flow is a shorthand for direction and wrap ", " flex-flow: column wrap "],
+            [" Justify - main axis ", " jusitfy-content: flex-start | flex-end | center | space-between | space-around | space-evenly "],
+            [" Align - cross axis ", " align-items: flex-start | flex-end | center | stretch | baseline "],
+            [" Order ", " order: 0 | 1 | 2 | 3 "]
+        ])
+        puts flexbox_table.render(:unicode, alignments: [:left, :left])
+    when "Exit"
+        break
     end
 end
+
+puts "Goodbye"
 
 # list_of_users = []
 
