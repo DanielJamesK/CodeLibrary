@@ -1,8 +1,8 @@
 require 'tty-prompt'
+require 'tty-table'
 require 'json'
 require 'csv'
 
-prompt = TTY::Prompt.new
 
 class User
 
@@ -11,11 +11,11 @@ class User
         @username = username
         @password = password
     end
-
+    
     def display_options
         puts "What would you like to do?"
-        puts "Options: "
-        puts @options
+            puts "Options: "
+            puts @options
     end
 end 
 
@@ -34,42 +34,92 @@ class AdminUser < User
     end
 end
 
-def createAccount
-    puts "Please create a username"
-    input_username = gets.chomp
-    puts "Please create a password"
-    input_password = gets.chomp
-    user_account = { input_username: input_password }
-    CSV.open("users.csv" , "a") do |user|
-        user << [input_username, input_password]
+
+#     puts "Please create a username"
+#     input_username = gets.chomp
+#     puts "Please create a password"
+#     input_password = gets.chomp
+#     puts "Are you an admin? yes/no"
+#     input_answer = gets.chomp
+#     if input_answer == "yes"
+#         AdminUser.new(input_username, input_password)
+#     else
+#         GeneralUser.new(input_username, input_password)
+#     end
+#     CSV.open("users.csv" , "a") do |user|
+#         user << [input_username, input_password, input_answer]
+#     end
+#     puts "Account Created"
+#     return
+
+
+
+# def loginScreen
+#     prompt = TTY::Prompt.new
+#     login_menu = prompt.select('Please select an option:') do |menu|
+        
+#         menu.choice 'Create an Account'
+#         menu.choice 'Sign-In'
+#         menu.choice 'Exit'
+#     end
+    
+#     case login_menu
+#     when "Create an Account"
+#         system ("clear")
+#         puts "If you created an account, please Sign-In to continue"
+#         loginScreen     
+#     when "Sign-In"
+#         puts "Please enter your username"
+#         input_username = gets.chomp
+#         puts "Please enter your password"
+#         input_password = gets.chomp
+#         authenticate_users = File.open("users.csv", "r")
+#         if authenticate_users.read().include? "yes"
+#             puts authenticate_users.read().include? input_username
+#             puts "You are logged in as admin"
+#         else 
+#             puts authenticate_users.read().include? input_username
+#             puts "You are logged in"
+#         end
+#     end
+# end
+
+prompt = TTY::Prompt.new
+    display_options_menu = prompt.select('Please select an option:') do |menu|
+        
+        menu.choice 'Add Code'
+        menu.choice 'Edit Code'
+        menu.choice 'Remove Code'
+        menu.choice 'Search'
+        menu.choice 'Help'
+        menu.choice 'Exit'
     end
 
-
-    # CSV.open("cats.csv", "w") do |csv|
-#    csv << ["color", "qty"]
-#    cats.to_a.each { |cat| csv << cat }
-# end
-end
-
-
-
-list_of_users = [
-    GeneralUser.new("Steph", "pass"),
-    GeneralUser.new("Ben", "password"),
-    AdminUser.new("Daniel", "admin")
-]
-
-
-login_menu = prompt.select('Please select an option:') do |menu|
-  
-    menu.choice 'Create an Account'
-    menu.choice 'Sign-In'
-    menu.choice 'Exit'
-end
-
-case login_menu
-when "Create an Account"
-    createAccount
-end
+    case display_options_menu
+    when "Search"
+        table = TTY::Table.new(["header1","header2"], [["a1", "a2"], ["b1", "b2"]])
+        puts table.render(:ascii)
+    end
     
+    
+
+# list_of_users = []
+
+# CSV.foreach("users.csv") do |row|
+#     #p row 
+#     hash = {name: row[0], password: row[1]}
+#     list_of_users << hash
+# end
+
+# p list_of_users
+
+# user = list_of_users.find { |user| user.username == input_username  }
+# if user.username == input.username && user.password == input_password
+#     p "hello"
+# end
+
+#loginScreen
+#signIn
+
+
 

@@ -68,6 +68,7 @@ PLATFORMS
 
 DEPENDENCIES
   tty (~> 0.7.0)
+  tty-table (~> 0.8.0)
 
 BUNDLED WITH
    2.1.4
