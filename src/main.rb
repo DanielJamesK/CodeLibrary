@@ -35,55 +35,11 @@ class AdminUser < User
     end
 end
 
-
-#     puts "Please create a username"
-#     input_username = gets.chomp
-#     puts "Please create a password"
-#     input_password = gets.chomp
-#     puts "Are you an admin? yes/no"
-#     input_answer = gets.chomp
-#     if input_answer == "yes"
-#         AdminUser.new(input_username, input_password)
-#     else
-#         GeneralUser.new(input_username, input_password)
-#     end
-#     CSV.open("users.csv" , "a") do |user|
-#         user << [input_username, input_password, input_answer]
-#     end
-#     puts "Account Created"
-#     return
-
-
-
-# def loginScreen
-#     prompt = TTY::Prompt.new
-#     login_menu = prompt.select('Please select an option:') do |menu|
-        
-#         menu.choice 'Create an Account'
-#         menu.choice 'Sign-In'
-#         menu.choice 'Exit'
-#     end
-    
-#     case login_menu
-#     when "Create an Account"
-#         system ("clear")
-#         puts "If you created an account, please Sign-In to continue"
-#         loginScreen     
-#     when "Sign-In"
-#         puts "Please enter your username"
-#         input_username = gets.chomp
-#         puts "Please enter your password"
-#         input_password = gets.chomp
-#         authenticate_users = File.open("users.csv", "r")
-#         if authenticate_users.read().include? "yes"
-#             puts authenticate_users.read().include? input_username
-#             puts "You are logged in as admin"
-#         else 
-#             puts authenticate_users.read().include? input_username
-#             puts "You are logged in"
-#         end
-#     end
-# end
+def exitProgram
+    system("clear")
+    puts "Goodbye!"
+    exit
+end
 
 # This content is used to populate the Image manipulation table
 image_height = [" Increase image height by a percentage or by pixel amount ", " height: %, height: px "]
@@ -119,12 +75,6 @@ pets = {title: " Image ", Description: " Grid Template Rows - Defines the rows o
 
 File.open("pets.yml", "w") { |file| file.write(pets.to_yaml) }
 
-
-def exitProgram
-    system("clear")
-    puts "Goodbye!"
-    exit
-end
 
 loop do
     prompt = TTY::Prompt.new
@@ -168,6 +118,14 @@ loop do
             case search_options
             when "Image Manipulation"
                 system("clear")
+
+            puts"██╗███╗░░░███╗░█████╗░░██████╗░███████╗░██████╗"
+            puts"██║████╗░████║██╔══██╗██╔════╝░██╔════╝██╔════╝"
+            puts"██║██╔████╔██║███████║██║░░██╗░█████╗░░╚█████╗░"
+            puts"██║██║╚██╔╝██║██╔══██║██║░░╚██╗██╔══╝░░░╚═══██╗"
+            puts"██║██║░╚═╝░██║██║░░██║╚██████╔╝███████╗██████╔╝"
+            puts"╚═╝╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═════╝░\n\n"
+
                 image_table = TTY::Table.new(["Title","Description","Code Snippet"], 
                 [
                     image_height,
@@ -175,14 +133,21 @@ loop do
                     responsive_image,
                     image_border,
                     opacity,
+                    image_file = YAML.load(File.read("code.yml"))
                 ])
                  puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
                 # image_file = YAML.dump(File.read("code.yml"))
                 # pp image_file
-                # image_file = YAML.load(File.read("code.yml"))
                 # puts image_file
             when "Text Manipulation"
                 system("clear")
+
+                puts"████████╗███████╗██╗░░██╗████████╗"
+                puts"╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝"
+                puts"░░░██║░░░█████╗░░░╚███╔╝░░░░██║░░░"
+                puts"░░░██║░░░██╔══╝░░░██╔██╗░░░░██║░░░"
+                puts"░░░██║░░░███████╗██╔╝╚██╗░░░██║░░░"
+                puts"░░░╚═╝░░░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░\n\n"
                 text_table = TTY::Table.new(["Description","Code Snippet"], 
                 [
                     font_size,
@@ -192,10 +157,17 @@ loop do
                     font_style,
                     responsive_font
                 ])
-                puts text_table.render(:unicode, multiline: true, alignments: [:left, :left])
+                puts text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 
             when "Flexbox"
                 system("clear")
+                
+               puts"███████╗██╗░░░░░███████╗██╗░░██╗██████╗░░█████╗░██╗░░██╗"
+               puts"██╔════╝██║░░░░░██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗╚██╗██╔╝"
+               puts"█████╗░░██║░░░░░█████╗░░░╚███╔╝░██████╦╝██║░░██║░╚███╔╝░"
+               puts"██╔══╝░░██║░░░░░██╔══╝░░░██╔██╗░██╔══██╗██║░░██║░██╔██╗░"
+               puts"██║░░░░░███████╗███████╗██╔╝╚██╗██████╦╝╚█████╔╝██╔╝╚██╗"
+               puts"╚═╝░░░░░╚══════╝╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚═╝\n\n"
                 flexbox_table = TTY::Table.new(["Description","Code Snippet"], 
                 [
                     flex_direction,
@@ -205,10 +177,17 @@ loop do
                     align_items,
                     order
                 ])
-                puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left])
+                puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 
             when "Grid"
                 system("clear")
+                
+               puts"░██████╗░██████╗░██╗██████╗░"
+               puts"██╔════╝░██╔══██╗██║██╔══██╗"
+               puts"██║░░██╗░██████╔╝██║██║░░██║"
+               puts"██║░░╚██╗██╔══██╗██║██║░░██║"
+               puts"╚██████╔╝██║░░██║██║██████╔╝"
+               puts"░╚═════╝░╚═╝░░╚═╝╚═╝╚═════╝░\n\n"
                 grid_table = TTY::Table.new(["Description","Code Snippet"], 
                 [
                     grid_template_columns,
@@ -216,7 +195,7 @@ loop do
                     grid_column_grid_row,
                     grid_template_areas,
                 ])
-                puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left])
+                puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 
             when "Back"
                 system("clear")
