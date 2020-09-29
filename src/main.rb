@@ -2,7 +2,8 @@ require 'tty-prompt'
 require 'tty-table'
 require 'json'
 require 'csv'
-
+require 'yaml'
+require 'pp'
 
 class User
 
@@ -88,7 +89,7 @@ end
 image_height = [" Increase image height by a percentage or by pixel amount ", " height: %, height: px "]
 image_width = [" Increase image width by a percentage or by pixel amount ", " width: %, width: px "]
 responsive_image = [" Responsive Image ", " width: 100%, height: auto "]
-image_border = [" Image border, defines the width of the border, what type of border, is this case it is solid, and the colour ", " border: 5px solid black "]
+image_border = [" Image border, defines the width of the border, what type of border,\n in this case it is solid, and the colour ", " border: 5px solid black "]
 opacity = [" Opacity, in the example the opacity is set to 50% ", " opacity: 0.5 "]
 
 # This content is used to populate the Font manipulation table
@@ -111,11 +112,22 @@ order = [" Order - Is used to manipulate the order of objects ", " order: 0 | 1 
 grid_template_columns = [" Grid Template Columns - Defines the columns of the grid with a space-seperated list of values ", " grid-template-columns: 40px 50px auto 50px 40px | 1fr 1fr 1fr | repeat(3, 1fr) "]
 grid_template_rows = [" Grid Template Rows - Defines the rows of the grid with a space-seperated list of values ", " grid-template-rows: 25% 100px auto | 1fr 1fr | repeat(2, 1fr) "]
 grid_column_grid_row = [" Grid Column/Grid Row - This is the shorthand for grid-column-start/end and grid-row-start/end ", " grid-column: 1/3 | grid-row: 2/4 "]
-grid_template_areas = [" Defines a grid template by referencing the names of the grid areas which are specified with the grid-area property", " header header main main footer footer "]
+grid_template_areas = [" Defines a grid template by referencing the names of the grid areas\n which are specified with the grid-area property", " header header\n main main\n footer footer "]
 column_row_gap = [" Column and Row Gap - Specifies the size of the grid lines. ", " column-gap: 15px | row-gap: 10px "]
 
+pets = {title: " Image ", Description: " Grid Template Rows - Defines the rows of the grid\n with a space-seperated list of values ", code: " grid-template-rows: 25% 100px auto | 1fr 1fr | repeat(2, 1fr) "}
 
-prompt = TTY::Prompt.new
+File.open("pets.yml", "w") { |file| file.write(pets.to_yaml) }
+
+
+def exitProgram
+    system("clear")
+    puts "Goodbye!"
+    exit
+end
+
+loop do
+    prompt = TTY::Prompt.new
     display_options_menu = prompt.select('Please select an option:') do |menu|   
         menu.choice 'Add Code'
         menu.choice 'Edit Code'
@@ -124,74 +136,99 @@ prompt = TTY::Prompt.new
         menu.choice 'Help'
         menu.choice 'Exit'
     end
+    
+    loop do
+        case display_options_menu
+        when "Add Code"
+            puts "Please enter a code Title"
+            input_title = gets.chomp
+            puts "Please enter a code Description"
+            input_description = gets.chomp
+            puts "Please enter a code snippet"
+            input_snippet = gets.chomp
+            code = {title: input_title, description: input_description, code_snippet: input_snippet}
+            File.open("code.yml", "a") { |file|  file.write(code.to_yaml) }
+            break
 
-loop do
-    case display_options_menu
-    when "Search"
+        when "Remove Code"
+            puts "Please enter the title of the code snippet you wish to remove"
+            remove_title = gets.chomp
+
+        when "Search"
         prompt = TTY::Prompt.new
-        search_options = prompt.select('Please select an option:') do |menu|
-        
+        search_options = prompt.select('Please select a category:') do |menu|
             menu.choice 'Image Manipulation'
             menu.choice 'Text Manipulation'
             menu.choice 'Flexbox'
             menu.choice 'Grid'
+            menu.choice 'Back'
             menu.choice 'Exit'
         end
-    end
 
-    case search_options
-    when "Image Manipulation"
-        system("clear")
-        image_table = TTY::Table.new(["Description","Code Snippet"], 
-        [
-            image_height,
-            image_width,
-            responsive_image,
-            image_border,
-            opacity
-        ])
-        puts image_table.render(:unicode, alignments: [:left, :left])
+            case search_options
+            when "Image Manipulation"
+                system("clear")
+                image_table = TTY::Table.new(["Title","Description","Code Snippet"], 
+                [
+                    image_height,
+                    image_width,
+                    responsive_image,
+                    image_border,
+                    opacity,
+                ])
+                 puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+                # image_file = YAML.dump(File.read("code.yml"))
+                # pp image_file
+                # image_file = YAML.load(File.read("code.yml"))
+                # puts image_file
+            when "Text Manipulation"
+                system("clear")
+                text_table = TTY::Table.new(["Description","Code Snippet"], 
+                [
+                    font_size,
+                    font_weight,
+                    font_colour,
+                    font_family,
+                    font_style,
+                    responsive_font
+                ])
+                puts text_table.render(:unicode, multiline: true, alignments: [:left, :left])
 
-    when "Text Manipulation"
-        system("clear")
-        text_table = TTY::Table.new(["Description","Code Snippet"], 
-        [
-            font_size,
-            font_weight,
-            font_colour,
-            font_family,
-            font_style,
-            responsive_font
-        ])
-        puts text_table.render(:unicode, alignments: [:left, :left])
+            when "Flexbox"
+                system("clear")
+                flexbox_table = TTY::Table.new(["Description","Code Snippet"], 
+                [
+                    flex_direction,
+                    flex_wrap,
+                    flex_flow,
+                    justify_content,
+                    align_items,
+                    order
+                ])
+                puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left])
 
-    when "Flexbox"
-        system("clear")
-        flexbox_table = TTY::Table.new(["Description","Code Snippet"], 
-        [
-            flex_direction,
-            flex_wrap,
-            flex_flow,
-            justify_content,
-            align_items,
-            order
-            
-        ])
-        puts flexbox_table.render(:unicode, alignments: [:left, :left])
+            when "Grid"
+                system("clear")
+                grid_table = TTY::Table.new(["Description","Code Snippet"], 
+                [
+                    grid_template_columns,
+                    grid_template_rows,
+                    grid_column_grid_row,
+                    grid_template_areas,
+                ])
+                puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left])
 
-    when "Grid"
-        system("clear")
-        grid_table = TTY::Table.new(["Description","Code Snippet"], 
-        [
-            grid_template_columns,
-            grid_template_rows,
-            grid_column_grid_row,
-            grid_template_areas
-     
-        ])
-        puts grid_table.render(:unicode, alignments: [:left, :left])
-    when "Exit"
-        break
+            when "Back"
+                system("clear")
+                break
+            when "Exit"
+                system("clear")
+                exitProgram
+            end
+        when "Exit"
+            system("clear")
+            exitProgram
+        end
     end
 end
 
