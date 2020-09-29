@@ -95,6 +95,7 @@ prompt = TTY::Prompt.new
         menu.choice 'Exit'
     end
 
+loop do
     case display_options_menu
     when "Search"
         prompt = TTY::Prompt.new
@@ -105,21 +106,36 @@ prompt = TTY::Prompt.new
             menu.choice 'Colours'
             menu.choice 'Flexbox'
             menu.choice 'Grid'
+            menu.choice 'Exit'
         end
     end
-    
+
     case search_options
     when "Image Manipulation"
         table = TTY::Table.new(["Description","Code Snippet"], 
         [
-            [" Increase image height by a percentage or by pixel amount ", " height: %, height: px "], 
+            [" Increase image height by a percentage or by pixel amount ", " height: %, height: px "],
             [" Increase image width by a percentage or by pixel amount ", " width: %, width: px "],
             [" Responsive Image ", " width: 100%, height: auto "],
             [" Image border, defines the width of the border, what type of border, is this case it is solid, and the colour ", " border: 5px solid black "],
             [" Opacity, in the example the opacity is set to 50% ", " opacity: 0.5 "]
         ])
         puts table.render(:ascii)
+
+    when "Text Manipulation"
+        system("clear")
+        table = TTY::Table.new(["Description","Code Snippet"], 
+        [
+            [" Font Size ", " font-size: 16px, font-size: 1rem "],
+            [" Font Weight ", " font-weight: bold, font-weight: 800 "],
+            [" Font Colour ", " color: white, colour: #fff "],
+            [" Font Family ", " font-family: Arial, Helvetica, sans-seriff "],
+            [" Font Style ", " font-style: normal, font-style: italic "],
+            [" Responsive Font Size ", " font-size: 10vw "]
+        ])
+        puts table.render(:ascii)
     end
+end
 
 # list_of_users = []
 
