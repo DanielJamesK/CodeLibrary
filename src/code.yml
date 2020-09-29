@@ -14,3 +14,7 @@
 :title: ASD
 :description: ASD
 :code_snippet: ASD
+---
+:title: Image Hover
+:description: When you hover over the image it does this
+:code_snippet: 'image:hover color: blue'
