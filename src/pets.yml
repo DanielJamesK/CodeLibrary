@@ -1,5 +1,0 @@
----
-:title: " Image "
-:Description: " Grid Template Rows - Defines the rows of the grid\n with a space-seperated
-  list of values "
-:code: " grid-template-rows: 25% 100px auto | 1fr 1fr | repeat(2, 1fr) "
