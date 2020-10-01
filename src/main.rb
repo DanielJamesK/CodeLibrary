@@ -101,14 +101,33 @@ loop do
             end
         end     
     when "Remove Code"
+        case code_catelogue_menu
+        when "Image Manipulation"
+            puts "Please type the Title of the code you wish to delete"
+            delete_input = gets.chomp
+            # updated_images = CSV.table("image_manipulation.csv")
+            # updated_images.delete_if do |row|
+            #     row[:title] == delete_input
+            # end
+
+            # File.open("image_manipulation.csv", "w") do |f|
+            #     f.write(updated_images.to_csv)
+            # end
+            updated_images = CSV.read("image_manipulation.csv", headers:true)
+            updated_images.delete_if{ |row| row["title"] == delete_input }
+
+            CSV.open("image_manipulation.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            updated_images.each { |image| row << image }
+            }
+        end
     when "Search"
         case code_catelogue_menu
         when "Image Manipulation"
             system("clear")
-            # images_library=CSV.parse(File.read("image_manipulation.csv"), headers: true)
             images = []
             CSV.foreach("image_manipulation.csv", headers: true).select { |row| 
-                images << [row["Title"], row["Description"], row["Code Snippet"]]
+                images << [row["title"], row["description"], row["code snippet"]]
         }
             image_table = TTY::Table.new(["Title","Description","Code Snippet"], images)
             puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
