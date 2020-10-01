@@ -104,21 +104,35 @@ loop do
         case code_catelogue_menu
         when "Image Manipulation"
             puts "Please type the Title of the code you wish to delete"
-            delete_input = gets.chomp
-            # updated_images = CSV.table("image_manipulation.csv")
-            # updated_images.delete_if do |row|
-            #     row[:title] == delete_input
-            # end
-
-            # File.open("image_manipulation.csv", "w") do |f|
-            #     f.write(updated_images.to_csv)
-            # end
-            updated_images = CSV.read("image_manipulation.csv", headers:true)
-            updated_images.delete_if{ |row| row["title"] == delete_input }
+            image_delete_input = gets.chomp
+            removed_images = CSV.read("image_manipulation.csv", headers:true)
+            removed_images.delete_if{ |row| row["title"] == image_delete_input }
 
             CSV.open("image_manipulation.csv", "w", headers:true) { |row| 
             row << ["title","description","code snippet"]
-            updated_images.each { |image| row << image }
+            removed_images.each { |image| row << image }
+            }
+        end
+    when "Edit Code"
+        case code_catelogue_menu
+        when "Image Manipulation"
+            puts "Please type the Title of the code you wish to edit"
+            image_edit_input = gets.chomp
+            edited_images = CSV.read("image_manipulation.csv", headers:true)
+            edited_images.delete_if do |row| 
+            row["title"] == image_edit_input
+            end
+            puts "Please enter new Title for the code"
+            image_edit_title_input = gets.chomp
+            puts "Please enter a new Description for the code"
+            image_edit_description_input = gets.chomp
+            puts "Please enter a new code snippet"
+            image_edit_snippet_input = gets.chomp
+            edited_images << [image_edit_title_input, image_edit_description_input, image_edit_snippet_input]
+            
+            CSV.open("image_manipulation.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            edited_images.each { |image| row << image }
             }
         end
     when "Search"
