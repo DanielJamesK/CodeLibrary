@@ -86,16 +86,8 @@ def display_images
 end
 
 def add_code
-    case code_catelogue_menu
-    when "Image Manipulation"
-        csv_option = "image_manipulation.csv"
-    when "Text Manipulation"
-        csv_option = "text_manipulation.csv"
-    when "Flexbox"
-        csv_option = "flexbox.csv"
-    when "Grid"
-        csv_option = "grid.csv"
-    end
+    csv_option = 
+    csv_options
     puts "Please enter a Title for the code"
     a_input = gets.chomp
     puts "Please enter a description of the code"
@@ -108,6 +100,44 @@ def add_code
 end
 
 def remove_code
+    csv_option = 
+    csv_options
+    puts "Please type the Title of the code you wish to delete"
+    delete_input = gets.chomp
+    removed_code = CSV.read(csv_option, headers:true)
+    removed_code.delete_if{ |row| row["title"] == delete_input }
+
+    CSV.open(csv_option, "w", headers:true) { |row| 
+    row << ["title","description","code snippet"]
+    removed_code.each { |code| row << code }
+    }
+end
+
+def edit_code
+    csv_option = 
+    csv_options
+    puts "Please type the Title of the code you wish to edit"
+    edit_input = gets.chomp
+    edited_code = CSV.read(csv_option, headers:true)
+    edited_code.delete_if do |row| 
+    row["title"] == edit_input
+    end
+    puts "Please enter new Title for the code"
+    edit_title_input = gets.chomp
+    puts "Please enter a new Description for the code"
+    edit_description_input = gets.chomp
+    puts "Please enter a new code snippet"
+    edit_snippet_input = gets.chomp
+    edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
+    
+    CSV.open(csv_option, "w", headers:true) { |row| 
+    row << ["title","description","code snippet"]
+    edited_code.each { |code| row << code }
+    }
+end
+
+def csv_options
+    csv_option = 
     case code_catelogue_menu
     when "Image Manipulation"
         csv_option = "image_manipulation.csv"
@@ -118,15 +148,6 @@ def remove_code
     when "Grid"
         csv_option = "grid.csv"
     end
-    puts "Please type the Title of the code you wish to delete"
-    delete_input = gets.chomp
-    removed_code = CSV.read(csv_option, headers:true)
-    removed_code.delete_if{ |row| row["title"] == delete_input }
-
-    CSV.open(csv_option, "w", headers:true) { |row| 
-    row << ["title","description","code snippet"]
-    removed_code.each { |code| row << code }
-    }
 end
 
 loop do
