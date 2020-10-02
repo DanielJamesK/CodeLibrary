@@ -1,0 +1,8 @@
+title,description,code snippet
+Display Flex,Initiates the container as a flex container,display: flex
+Flex Direction,This sets how flex items are placed in the flex container defining the main axis and the direction,flex-direction: row | row-reverse | column | column-reverse
+Flex Wrap,Flex wrap defines whether the flex items are forced into a single line or can be flowed into multiple lines,flex-wrap: nowrap | wrap | wrap-reverse
+Flex Flow,Flex flow is a shorthand for direction and wrap,flex-flow: column wrap
+Justify Content,Justify content - main axis,jusitfy-content: flex-start | flex-end | center | space-between | space-around | space-evenly
+Align Items,Align items - cross axis,align-items: flex-start | flex-end | center | stretch | baseline
+Order,Order - Is used to manipulate the order of objects,order: 0 | 1 | 2 | 3

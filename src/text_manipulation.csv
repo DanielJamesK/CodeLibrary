@@ -1,3 +1,6 @@
-Title,Description,Code Snippet
-Font size,Increase/Decrease font size,font-size: 16px | 1rem | 1em
-asd,sad,asd
+title,description,code snippet
+Font Size,Defines the size of the characters displayed on the screen,font-size: 16px | 1rem | 1rem
+Font Weight,Defines the thinness or thickness of the characters,font-weight: 800 | bold
+Font Family,The font-family property specifies the font for an element,font-family: Arial
+Font Colour,Sets the colour of a character depending on the value given,color: white | #fff
+Responsive Font,The font size will change depending on the size of the screen,font-size: 16vw

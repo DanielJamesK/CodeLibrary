@@ -74,7 +74,6 @@ def code_catelogue_menu
     end
 end
 
-
 loop do
     case display_options_menu
     when "Add Code"
@@ -99,6 +98,26 @@ loop do
             CSV.open("text_manipulation.csv", "a") do |row|
                 row << [text_title_input, text_description_input, text_snippet_input]
             end
+        when "Flexbox"
+            puts "Please enter a Title for the code"
+            flexbox_title_input = gets.chomp
+            puts "Please enter a description of the code"
+            flexbox_description_input = gets.chomp
+            puts "Please enter a code snippet"
+            flexbox_snippet_input = gets.chomp
+            CSV.open("flexbox.csv", "a") do |row|
+                row << [flexbox_title_input, flexbox_description_input, flexbox_snippet_input]
+            end
+        when "Grid"
+            puts "Please enter a Title for the code"
+            grid_title_input = gets.chomp
+            puts "Please enter a description of the code"
+            grid_description_input = gets.chomp
+            puts "Please enter a code snippet"
+            grid_snippet_input = gets.chomp
+            CSV.open("grid.csv", "a") do |row|
+                row << [grid_title_input, grid_description_input, grid_snippet_input]
+            end
         end     
     when "Remove Code"
         case code_catelogue_menu
@@ -111,6 +130,36 @@ loop do
             CSV.open("image_manipulation.csv", "w", headers:true) { |row| 
             row << ["title","description","code snippet"]
             removed_images.each { |image| row << image }
+            }
+        when "Text Manipulation"
+            puts "Please type the Title of the code you wish to delete"
+            text_delete_input = gets.chomp
+            removed_text = CSV.read("text_manipulation.csv", headers:true)
+            removed_text.delete_if{ |row| row["title"] == text_delete_input }
+
+            CSV.open("text_manipulation.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            removed_text.each { |text| row << text }
+            }
+        when "Flexbox"
+            puts "Please type the Title of the code you wish to delete"
+            flexbox_delete_input = gets.chomp
+            removed_flexbox = CSV.read("flexbox.csv", headers:true)
+            removed_flexbox.delete_if{ |row| row["title"] == flexbox_delete_input }
+
+            CSV.open("flexbox.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            removed_flexbox.each { |flexbox| row << flexbox }
+            }
+        when "Grid"
+            puts "Please type the Title of the code you wish to delete"
+            grid_delete_input = gets.chomp
+            removed_grid = CSV.read("grid.csv", headers:true)
+            removed_grid.delete_if{ |row| row["title"] == grid_delete_input }
+
+            CSV.open("grid.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            removed_grid.each { |grid| row << grid }
             }
         end
     when "Edit Code"
@@ -134,6 +183,63 @@ loop do
             row << ["title","description","code snippet"]
             edited_images.each { |image| row << image }
             }
+        when "Text Manipulation"
+            puts "Please type the Title of the code you wish to edit"
+            text_edit_input = gets.chomp
+            edited_text = CSV.read("text_manipulation.csv", headers:true)
+            edited_text.delete_if do |row| 
+            row["title"] == text_edit_input
+            end
+            puts "Please enter new Title for the code"
+            text_edit_title_input = gets.chomp
+            puts "Please enter a new Description for the code"
+            text_edit_description_input = gets.chomp
+            puts "Please enter a new code snippet"
+            text_edit_snippet_input = gets.chomp
+            edited_text << [text_edit_title_input, text_edit_description_input, text_edit_snippet_input]
+            
+            CSV.open("text_manipulation.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            edited_text.each { |text| row << text }
+            }
+        when "Flexbox"
+            puts "Please type the Title of the code you wish to edit"
+            flexbox_edit_input = gets.chomp
+            edited_flexbox = CSV.read("flexbox.csv", headers:true)
+            edited_flexbox.delete_if do |row| 
+            row["title"] == flexbox_edit_input
+            end
+            puts "Please enter new Title for the code"
+            flexbox_edit_title_input = gets.chomp
+            puts "Please enter a new Description for the code"
+            flexbox_edit_description_input = gets.chomp
+            puts "Please enter a new code snippet"
+            flexbox_edit_snippet_input = gets.chomp
+            edited_flexbox << [flexbox_edit_title_input, flexbox_edit_description_input, flexbox_edit_snippet_input]
+            
+            CSV.open("flexbox.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            edited_flexbox.each { |flexbox| row << flexbox }
+            }
+        when "Grid"
+            puts "Please type the Title of the code you wish to edit"
+            grid_edit_input = gets.chomp
+            edited_grid = CSV.read("grid.csv", headers:true)
+            edited_grid.delete_if do |row| 
+            row["title"] == grid_edit_input
+            end
+            puts "Please enter new Title for the code"
+            grid_edit_title_input = gets.chomp
+            puts "Please enter a new Description for the code"
+            grid_edit_description_input = gets.chomp
+            puts "Please enter a new code snippet"
+            grid_edit_snippet_input = gets.chomp
+            edited_grid << [grid_edit_title_input, grid_edit_description_input, grid_edit_snippet_input]
+            
+            CSV.open("grid.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            edited_grid.each { |grid| row << grid }
+            }
         end
     when "Search"
         case code_catelogue_menu
@@ -142,21 +248,33 @@ loop do
             images = []
             CSV.foreach("image_manipulation.csv", headers: true).select { |row| 
                 images << [row["title"], row["description"], row["code snippet"]]
-        }
+            }
             image_table = TTY::Table.new(["Title","Description","Code Snippet"], images)
             puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
         when "Text Manipulation"
             system("clear")
-            text = []
+            show_text = []
             CSV.foreach("text_manipulation.csv", headers: true).select { |row| 
-                text << [row["Title"], row["Description"], row["Code Snippet"]]
-        }
-            text_table = TTY::Table.new(["Title","Description","Code Snippet"], text)
-            puts text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+                show_text << [row["title"], row["description"], row["code snippet"]]
+            }
+            show_text_table = TTY::Table.new(["Title","Description","Code Snippet"], show_text)
+            puts show_text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
         when "Flexbox"
             system("clear")
+            flexbox = []
+            CSV.foreach("flexbox.csv", headers: true).select { |row| 
+                flexbox << [row["title"], row["description"], row["code snippet"]]
+            }
+            flexbox_table = TTY::Table.new(["Title","Description","Code Snippet"], flexbox)
+            puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
         when "Grid"
-            system("clear")     
+            system("clear")   
+            grid = []
+            CSV.foreach("grid.csv", headers: true).select { |row| 
+                grid << [row["title"], row["description"], row["code snippet"]]
+            }
+            grid_table = TTY::Table.new(["Title","Description","Code Snippet"], grid)
+            puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])  
         when "Back"
             system("clear")
             break
