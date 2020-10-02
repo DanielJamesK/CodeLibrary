@@ -1,2 +1,6 @@
 title,description,code snippet
-
+Font Weight,Defines the thinness or thickness of the characters,font-weight: 800 | bold
+Opacity,The quality of lacking transparency,opacity: 0.5
+Font Colour,Sets the colour of a character depending on the value given,color: white | #fff
+Column Row Gap,Column and row gap specifies the size of the grid lines,column-gap: 15px | row-gap: 10px
+Order,Order - Is used to manipulate the order of objects,order: 0 | 1 | 2 | 3

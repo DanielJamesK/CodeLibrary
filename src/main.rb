@@ -307,8 +307,6 @@ loop do
                 CSV.open("favourites.csv", "a", headers:true) { |row| 
                 image_favourites_add.each { |favourite| row << favourite }
                 }
-            else
-                puts "no"
             end
         when "Text Manipulation"
             system("clear")
@@ -318,6 +316,21 @@ loop do
             }
             show_text_table = TTY::Table.new(["Title","Description","Code Snippet"], show_text)
             puts show_text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+            puts "Would you like to add any of these code snippets to your favourites?"
+            prompt = TTY::Prompt.new
+            add_code_prompt = prompt.select('Please select an answer:') do |menu|
+                menu.choice 'Yes'
+                menu.choice 'No'
+            end
+            if add_code_prompt.downcase == "yes"
+                puts "Please enter the title of the code you would like to add"
+                text_favourites_input = gets.chomp
+                text_favourites_add = CSV.read("text_manipulation.csv", headers:true)
+                text_favourites_add.delete_if{ |row| row["title"] != text_favourites_input } 
+                CSV.open("favourites.csv", "a", headers:true) { |row| 
+                text_favourites_add.each { |favourite| row << favourite }
+                }
+            end
         when "Flexbox"
             system("clear")
             flexbox = []
@@ -326,6 +339,21 @@ loop do
             }
             flexbox_table = TTY::Table.new(["Title","Description","Code Snippet"], flexbox)
             puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+            puts "Would you like to add any of these code snippets to your favourites?"
+            prompt = TTY::Prompt.new
+            add_code_prompt = prompt.select('Please select an answer:') do |menu|
+                menu.choice 'Yes'
+                menu.choice 'No'
+            end
+            if add_code_prompt.downcase == "yes"
+                puts "Please enter the title of the code you would like to add"
+                flexbox_favourites_input = gets.chomp
+                flexbox_favourites_add = CSV.read("flexbox.csv", headers:true)
+                flexbox_favourites_add.delete_if{ |row| row["title"] != flexbox_favourites_input } 
+                CSV.open("favourites.csv", "a", headers:true) { |row| 
+                flexbox_favourites_add.each { |favourite| row << favourite }
+                }
+            end
         when "Grid"
             system("clear")   
             grid = []
@@ -333,7 +361,22 @@ loop do
                 grid << [row["title"], row["description"], row["code snippet"]]
             }
             grid_table = TTY::Table.new(["Title","Description","Code Snippet"], grid)
-            puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])  
+            puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+            puts "Would you like to add any of these code snippets to your favourites?"
+            prompt = TTY::Prompt.new
+            add_code_prompt = prompt.select('Please select an answer:') do |menu|
+                menu.choice 'Yes'
+                menu.choice 'No'
+            end
+            if add_code_prompt.downcase == "yes"
+                puts "Please enter the title of the code you would like to add"
+                grid_favourites_input = gets.chomp
+                grid_favourites_add = CSV.read("grid.csv", headers:true)
+                grid_favourites_add.delete_if{ |row| row["title"] != grid_favourites_input } 
+                CSV.open("favourites.csv", "a", headers:true) { |row| 
+                grid_favourites_add.each { |favourite| row << favourite }
+                }
+            end
         when "Back"
             system("clear")
             break
