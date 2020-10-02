@@ -34,22 +34,6 @@ require 'pp'
 #     end
 # end
 
-class CodeCatalogue
-    attr_accessor :code
-    def initialize
-        @code = []
-    end
-end
-
-class Images < CodeCatalogue
-    @images_library = []
-    def view_images_input(image_manipulation)
-        @images_library=CSV.parse(FILE.read("#{image_manipulation}.csv"))
-        image_table = TTY::Table.new(["Title","Description","Code Snippet"], @images_library.to_a)
-        image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
-    end
-end
-
 def display_options_menu
     prompt = TTY::Prompt.new
     display_options_menu = prompt.select('Please select an option:') do |menu|   
@@ -85,6 +69,36 @@ def display_images
     puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+def display_text
+    system("clear")
+    text = []
+    CSV.foreach("text_manipulation.csv", headers: true).select { |row| 
+    text << [row["title"], row["description"], row["code snippet"]]
+    }
+    text_table = TTY::Table.new(["Title","Description","Code Snippet"], text)
+    puts text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+end
+
+def display_flexbox
+    system("clear")
+    flexbox = []
+    CSV.foreach("flexbox.csv", headers: true).select { |row| 
+    flexbox << [row["title"], row["description"], row["code snippet"]]
+    }
+    flexbox_table = TTY::Table.new(["Title","Description","Code Snippet"], flexbox)
+    puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+end
+
+def display_grid
+    system("clear")
+    grid = []
+    CSV.foreach("grid.csv", headers: true).select { |row| 
+        grid << [row["title"], row["description"], row["code snippet"]]
+    }
+    grid_table = TTY::Table.new(["Title","Description","Code Snippet"], grid)
+    puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+end
+
 def add_code
     csv_option = 
     csv_options
@@ -102,6 +116,15 @@ end
 def remove_code
     csv_option = 
     csv_options
+    if csv_option == "image_manipulation.csv"
+        display_images
+    elsif csv_option == "text_manipulation.csv"
+        display_text
+    elsif csv_option == "flexbox.csv"
+        display_flexbox
+    else csv_option == "grid.csv"
+        display_grid
+    end
     puts "Please type the Title of the code you wish to delete"
     delete_input = gets.chomp
     removed_code = CSV.read(csv_option, headers:true)
@@ -116,6 +139,15 @@ end
 def edit_code
     csv_option = 
     csv_options
+    if csv_option == "image_manipulation.csv"
+        display_images
+    elsif csv_option == "text_manipulation.csv"
+        display_text
+    elsif csv_option == "flexbox.csv"
+        display_flexbox
+    else csv_option == "grid.csv"
+        display_grid
+    end
     puts "Please type the Title of the code you wish to edit"
     edit_input = gets.chomp
     edited_code = CSV.read(csv_option, headers:true)
@@ -183,11 +215,15 @@ end
 loop do
     case display_options_menu
     when "Add Code"
+        system("clear")
         add_code   
     when "Remove Code"
+        system("clear")
         remove_code
     when "Edit Code"
+        system("clear")
         edit_code
+
 # General User Search Options
     when "Search"
         display_search 
@@ -223,7 +259,5 @@ loop do
     end
 end
 
-
-puts "Goodbye"
 
 

@@ -6,5 +6,3 @@ Flex Flow,Flex flow is a shorthand for direction and wrap,flex-flow: column wrap
 Justify Content,Justify content - main axis,jusitfy-content: flex-start | flex-end | center | space-between | space-around | space-evenly
 Align Items,Align items - cross axis,align-items: flex-start | flex-end | center | stretch | baseline
 Order,Order - Is used to manipulate the order of objects,order: 0 | 1 | 2 | 3
-z,z,z
-a,a,a

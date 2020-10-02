@@ -2,5 +2,4 @@ title,description,code snippet
 Image Height,Increase image height by a percentage or by pixel amount,height: %, height: px
 Column Row Gap,Column and row gap specifies the size of the grid lines,column-gap: 15px | row-gap: 10px
 Flex Wrap,Flex wrap defines whether the flex items are forced into a single line or can be flowed into multiple lines,flex-wrap: nowrap | wrap | wrap-reverse
-b,b,b,
-b,b,""
+Opacity,The quality of lacking transparency,opacity: 0.5
