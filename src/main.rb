@@ -241,6 +241,48 @@ loop do
             edited_grid.each { |grid| row << grid }
             }
         end
+    # when "Search"
+    #     case code_catelogue_menu
+    #     when "Image Manipulation"
+    #         system("clear")
+    #         images = []
+    #         CSV.foreach("image_manipulation.csv", headers: true).select { |row| 
+    #             images << [row["title"], row["description"], row["code snippet"]]
+    #         }
+    #         image_table = TTY::Table.new(["Title","Description","Code Snippet"], images)
+    #         puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+    #     when "Text Manipulation"
+    #         system("clear")
+    #         show_text = []
+    #         CSV.foreach("text_manipulation.csv", headers: true).select { |row| 
+    #             show_text << [row["title"], row["description"], row["code snippet"]]
+    #         }
+    #         show_text_table = TTY::Table.new(["Title","Description","Code Snippet"], show_text)
+    #         puts show_text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+    #     when "Flexbox"
+    #         system("clear")
+    #         flexbox = []
+    #         CSV.foreach("flexbox.csv", headers: true).select { |row| 
+    #             flexbox << [row["title"], row["description"], row["code snippet"]]
+    #         }
+    #         flexbox_table = TTY::Table.new(["Title","Description","Code Snippet"], flexbox)
+    #         puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+    #     when "Grid"
+    #         system("clear")   
+    #         grid = []
+    #         CSV.foreach("grid.csv", headers: true).select { |row| 
+    #             grid << [row["title"], row["description"], row["code snippet"]]
+    #         }
+    #         grid_table = TTY::Table.new(["Title","Description","Code Snippet"], grid)
+    #         puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])  
+    #     when "Back"
+    #         system("clear")
+    #         break
+    #     when "Exit"
+    #         system("clear")
+    #         exitProgram
+    #     end
+# General User Search Options
     when "Search"
         case code_catelogue_menu
         when "Image Manipulation"
@@ -251,6 +293,17 @@ loop do
             }
             image_table = TTY::Table.new(["Title","Description","Code Snippet"], images)
             puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+            puts "Would you like to add any of these code snippets to your favourites?"
+            prompt = TTY::Prompt.new
+            add_code_prompt = prompt.select('Please select a category:') do |menu|
+                menu.choice 'Yes'
+                menu.choice 'No'
+            end
+            if add_code_prompt.downcase == "yes"
+                puts "yes"
+            else
+                puts "no"
+            end
         when "Text Manipulation"
             system("clear")
             show_text = []
@@ -288,7 +341,6 @@ loop do
     end
 end
 
-#.delete_if
 
 puts "Goodbye"
 
