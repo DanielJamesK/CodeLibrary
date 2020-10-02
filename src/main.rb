@@ -107,6 +107,28 @@ def add_code
     end
 end
 
+def remove_code
+    case code_catelogue_menu
+    when "Image Manipulation"
+        csv_option = "image_manipulation.csv"
+    when "Text Manipulation"
+        csv_option = "text_manipulation.csv"
+    when "Flexbox"
+        csv_option = "flexbox.csv"
+    when "Grid"
+        csv_option = "grid.csv"
+    end
+    puts "Please type the Title of the code you wish to delete"
+    delete_input = gets.chomp
+    removed_code = CSV.read(csv_option, headers:true)
+    removed_code.delete_if{ |row| row["title"] == delete_input }
+
+    CSV.open(csv_option, "w", headers:true) { |row| 
+    row << ["title","description","code snippet"]
+    removed_code.each { |code| row << code }
+    }
+end
+
 loop do
     case display_options_menu
     when "Add Code"
@@ -154,48 +176,49 @@ loop do
         #     end
         # end     
     when "Remove Code"
-        case code_catelogue_menu
-        when "Image Manipulation"
-            puts "Please type the Title of the code you wish to delete"
-            image_delete_input = gets.chomp
-            removed_images = CSV.read("image_manipulation.csv", headers:true)
-            removed_images.delete_if{ |row| row["title"] == image_delete_input }
+        remove_code
+        # case code_catelogue_menu
+        # when "Image Manipulation"
+        #     puts "Please type the Title of the code you wish to delete"
+        #     image_delete_input = gets.chomp
+        #     removed_images = CSV.read("image_manipulation.csv", headers:true)
+        #     removed_images.delete_if{ |row| row["title"] == image_delete_input }
 
-            CSV.open("image_manipulation.csv", "w", headers:true) { |row| 
-            row << ["title","description","code snippet"]
-            removed_images.each { |image| row << image }
-            }
-        when "Text Manipulation"
-            puts "Please type the Title of the code you wish to delete"
-            text_delete_input = gets.chomp
-            removed_text = CSV.read("text_manipulation.csv", headers:true)
-            removed_text.delete_if{ |row| row["title"] == text_delete_input }
+        #     CSV.open("image_manipulation.csv", "w", headers:true) { |row| 
+        #     row << ["title","description","code snippet"]
+        #     removed_images.each { |image| row << image }
+        #     }
+        # when "Text Manipulation"
+        #     puts "Please type the Title of the code you wish to delete"
+        #     text_delete_input = gets.chomp
+        #     removed_text = CSV.read("text_manipulation.csv", headers:true)
+        #     removed_text.delete_if{ |row| row["title"] == text_delete_input }
 
-            CSV.open("text_manipulation.csv", "w", headers:true) { |row| 
-            row << ["title","description","code snippet"]
-            removed_text.each { |text| row << text }
-            }
-        when "Flexbox"
-            puts "Please type the Title of the code you wish to delete"
-            flexbox_delete_input = gets.chomp
-            removed_flexbox = CSV.read("flexbox.csv", headers:true)
-            removed_flexbox.delete_if{ |row| row["title"] == flexbox_delete_input }
+        #     CSV.open("text_manipulation.csv", "w", headers:true) { |row| 
+        #     row << ["title","description","code snippet"]
+        #     removed_text.each { |text| row << text }
+        #     }
+        # when "Flexbox"
+        #     puts "Please type the Title of the code you wish to delete"
+        #     flexbox_delete_input = gets.chomp
+        #     removed_flexbox = CSV.read("flexbox.csv", headers:true)
+        #     removed_flexbox.delete_if{ |row| row["title"] == flexbox_delete_input }
 
-            CSV.open("flexbox.csv", "w", headers:true) { |row| 
-            row << ["title","description","code snippet"]
-            removed_flexbox.each { |flexbox| row << flexbox }
-            }
-        when "Grid"
-            puts "Please type the Title of the code you wish to delete"
-            grid_delete_input = gets.chomp
-            removed_grid = CSV.read("grid.csv", headers:true)
-            removed_grid.delete_if{ |row| row["title"] == grid_delete_input }
+        #     CSV.open("flexbox.csv", "w", headers:true) { |row| 
+        #     row << ["title","description","code snippet"]
+        #     removed_flexbox.each { |flexbox| row << flexbox }
+        #     }
+        # when "Grid"
+        #     puts "Please type the Title of the code you wish to delete"
+        #     grid_delete_input = gets.chomp
+        #     removed_grid = CSV.read("grid.csv", headers:true)
+        #     removed_grid.delete_if{ |row| row["title"] == grid_delete_input }
 
-            CSV.open("grid.csv", "w", headers:true) { |row| 
-            row << ["title","description","code snippet"]
-            removed_grid.each { |grid| row << grid }
-            }
-        end
+        #     CSV.open("grid.csv", "w", headers:true) { |row| 
+        #     row << ["title","description","code snippet"]
+        #     removed_grid.each { |grid| row << grid }
+        #     }
+        # end
     when "Edit Code"
         case code_catelogue_menu
         when "Image Manipulation"
