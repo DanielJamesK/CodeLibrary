@@ -4,3 +4,4 @@ Image Width,Increase image width by a percentage or by pixel amount,width: %, wi
 Responsive Image,Changes the images size depending on the screen size,width: 100% | height: auto
 Image Border,Defines the borders attributes,border: 5px solid black
 Opacity,The quality of lacking transparency,opacity: 0.5
+b,b,b
