@@ -57,6 +57,7 @@ def display_options_menu
         menu.choice 'Edit Code'
         menu.choice 'Remove Code'
         menu.choice 'Search'
+        menu.choice 'Favourites'
         menu.choice 'Help'
         menu.choice 'Exit'
     end
@@ -240,7 +241,7 @@ loop do
             row << ["title","description","code snippet"]
             edited_grid.each { |grid| row << grid }
             }
-        end
+            end
     # when "Search"
     #     case code_catelogue_menu
     #     when "Image Manipulation"
@@ -377,12 +378,38 @@ loop do
                 grid_favourites_add.each { |favourite| row << favourite }
                 }
             end
-        when "Back"
+        when "Back To Main Menu"
             system("clear")
             break
         when "Exit"
             system("clear")
-            exitProgram
+            exit
+        end
+    when "Favourites"
+        system("clear")
+        prompt = TTY::Prompt.new
+        favourites_prompt = prompt.select('What would you like to do?') do |menu|
+            menu.choice 'Display Favourite Code'
+            menu.choice 'Delete Code From Favourites'
+        end
+        if favourites_prompt.downcase == "display favourite code"
+            system("clear")
+            favourites = []
+            CSV.foreach("favourites.csv", headers: true).select { |row| 
+                favourites << [row["title"], row["description"], row["code snippet"]]
+            }
+            favourites_table = TTY::Table.new(["Title","Description","Code Snippet"], favourites)
+            puts favourites_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+        else favourites_prompt.downcase == "delete code from favourites"
+            puts "Please type the Title of the code you wish to delete"
+            favourite_delete_input = gets.chomp
+            removed_favourite = CSV.read("image_manipulation.csv", headers:true)
+            removed_favourite.delete_if{ |row| row["title"] == favourite_delete_input }
+
+            CSV.open("favourites.csv", "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            removed_favourite.each { |image| row << image }
+            }
         end
     when "Exit"
         system("clear")
