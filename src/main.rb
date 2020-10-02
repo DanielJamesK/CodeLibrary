@@ -295,12 +295,18 @@ loop do
             puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
             puts "Would you like to add any of these code snippets to your favourites?"
             prompt = TTY::Prompt.new
-            add_code_prompt = prompt.select('Please select a category:') do |menu|
+            add_code_prompt = prompt.select('Please select an answer:') do |menu|
                 menu.choice 'Yes'
                 menu.choice 'No'
             end
             if add_code_prompt.downcase == "yes"
-                puts "yes"
+                puts "Please enter the title of the code you would like to add"
+                image_favourites_input = gets.chomp
+                image_favourites_add = CSV.read("image_manipulation.csv", headers:true)
+                image_favourites_add.delete_if{ |row| row["title"] != image_favourites_input } 
+                CSV.open("favourites.csv", "a", headers:true) { |row| 
+                image_favourites_add.each { |favourite| row << favourite }
+                }
             else
                 puts "no"
             end
