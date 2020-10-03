@@ -3,36 +3,28 @@ require 'tty-table'
 require 'tty-font'
 require 'pastel'
 require 'csv'
+require 'rspec/autorun'
 
-# class User
+class User
 
-#     attr_reader :username, :password
-#     def initialize(username, password)
-#         @username = username
-#         @password = password
-#     end
-    
-#     def display_options
-#         puts "What would you like to do?"
-#             puts "Options: "
-#             puts @options
-#     end
-# end 
+    attr_reader :username, :password
+    def initialize(username, password)
+        @username = username
+        @password = password
+    end
+end 
 
-# class GeneralUser < User
-#     def initialize(username, password)
-#         super(username, password)
-#         @options = ["Search For Code", "Favourites", "Help", "Exit"]
-#         @favourites = {}
-#     end
-# end 
+class GeneralUser < User
+    def initialize(username, password)
+        super(username, password)
+    end
+end 
 
-# class AdminUser < User
-#     def initialize(username, password)
-#         super(username, password)
-#         @options = ["Add Code", "Edit Code", "Remove Code", "Search For Code", "Help", "Exit"]
-#     end
-# end
+class AdminUser < User
+    def initialize(username, password)
+        super(username, password)
+    end
+end
 
 def display_options_menu
     prompt = TTY::Prompt.new
@@ -40,6 +32,15 @@ def display_options_menu
         menu.choice 'Add Code'
         menu.choice 'Edit Code'
         menu.choice 'Remove Code'
+        menu.choice 'Search'
+        menu.choice 'Help'
+        menu.choice 'Exit'
+    end
+end
+
+def display_guest_options_menu
+    prompt = TTY::Prompt.new
+    display_options_menu = prompt.select('Please select an option:') do |menu|   
         menu.choice 'Search'
         menu.choice 'Favourites'
         menu.choice 'Help'
@@ -176,6 +177,9 @@ def add_code
 end
 
 def remove_code
+    remove_code_font = TTY::Font.new(:doom)
+    remove_code_title = Pastel.new
+    puts remove_code_title.cyan.bold(remove_code_font.write("REMOVE CODE", letter_spacing: 2))
     csv_option = 
     csv_options
     if csv_option == "image_manipulation.csv"
@@ -222,6 +226,9 @@ def remove_code
 end
 
 def edit_code
+    edit_code_font = TTY::Font.new(:doom)
+    edit_code_title = Pastel.new
+    puts edit_code_title.cyan.bold(edit_code_font.write("EDIT CODE", letter_spacing: 2))
     csv_option = 
     csv_options
     if csv_option == "image_manipulation.csv"
@@ -368,28 +375,37 @@ def csv_options
 end
 
 def invalid_title_name
+    system("clear")
     invalid_title_pastel = Pastel.new
     puts invalid_title_pastel.red("Error - Invalid Title name")
     puts "Returning you to the Main Menu"
 end
 
 def invalid_description
+    system("clear")
     invalid_description_pastel = Pastel.new
     puts invalid_description_pastel.red("Error - Invalid Description")
     puts "Returning you to the Main Menu"
 end
 
 def invalid_code_snippet
+    system("clear")
     invalid_code_snippet_pastel = Pastel.new
     puts invalid_code_snippet_pastel.red("Error - Invalid Code Snippet")
     puts "Returning you to the Main Menu"
 end
 
 def code_title_not_found
+    system("clear")
     code_title_pastel = Pastel.new
     puts code_title_pastel.red("Error - Code title not found")
     puts "Returning you to the Main Menu"
 end
+
+list_of_users = [    
+    GeneralUser.new("Guest", "password"),
+    AdminUser.new("Admin", "password")
+]
 
 title_line_one_font = TTY::Font.new(:doom)
 welcome_title = Pastel.new
@@ -403,75 +419,92 @@ title_line_three_font = TTY::Font.new(:doom)
 welcome_title = Pastel.new
 puts welcome_title.cyan.bold(title_line_three_font.write("CODE LIBRARY", letter_spacing: 2))
 
-loop do
-    case display_options_menu
-    when "Add Code"
-        system("clear")
-        add_code   
-    when "Remove Code"
-        system("clear")
-        remove_code
-    when "Edit Code"
-        system("clear")
-        edit_code
-
-# General User Search Options
-    when "Search"
-        display_search 
-    when "Favourites"
-        system("clear")
-        display_favourites
-        prompt = TTY::Prompt.new
-        favourites_prompt = prompt.select('What would you like to do?') do |menu|
-            menu.choice 'Delete Code From Favourites'
-            menu.choice 'Back to Main Menu'
-            menu.choice 'Exit'
-        end
-        case favourites_prompt
-        when "Delete Code From Favourites"
-            puts "Please type the Title of the code you wish to delete"
-            favourite_delete_input = gets.chomp
-            if favourite_delete_input.match? /\A[a-zA-Z':|-]{1,20}\z/
-                puts "Are you sure you want to remove #{favourite_delete_input.capitalize} from your favourites list?"
-                prompt = TTY::Prompt.new
-                favourite_remove_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
-                    menu.choice 'Yes'
-                    menu.choice 'No'
-                end
-                if favourite_remove_code_warning_prompt.downcase == "yes"
-                    removed_favourite = CSV.read("favourites.csv", headers:true)
-                    if removed_favourite.find { |row| row["title"] == favourite_delete_input.capitalize }
-                        removed_favourite.delete_if{ |row| row["title"] == favourite_delete_input.capitalize }
-                        CSV.open("favourites.csv", "w", headers:true) { |row| 
-                        row << ["title","description","code snippet"]
-                        removed_favourite.each { |favourite| row << favourite }
-                        }
-                        system("clear")
-                        puts "#{favourite_delete_input.capitalize} Successfully Removed"
-                    else
-                        puts "Error - Code title not found"
-                        puts "Returning you to the Main Menu"
-                    end
-                else favourite_remove_code_warning_prompt.downcase == "no"
-                    system("clear")
-                    puts "Returning you to Main Menu"
-                end 
-            else
-                puts "Error - Invalid Title name"
-                puts "Returning you to the Main Menu"
-            end
-        when "Back To Main Menu"
+prompt = TTY::Prompt.new
+login_options = prompt.select('Which user would you like to continue as?') do |menu|
+    menu.choice 'Admin'
+    menu.choice 'Guest'
+end
+if login_options.downcase == "admin"
+    loop do
+        case display_options_menu
+        when "Add Code"
             system("clear")
-            next
+            add_code   
+        when "Remove Code"
+            system("clear")
+            remove_code
+        when "Edit Code"
+            system("clear")
+            edit_code
+        when "Search"
+            display_search 
+        when "Help"
+            puts 
         when "Exit"
             system("clear")
             exit
         end
-    when "Exit"
-        system("clear")
-        exit
+    end
+else login_options.downcase == "guest"
+# General User Search Options
+    loop do
+        case display_guest_options_menu
+        when "Search"
+            display_search 
+        when "Favourites"
+            system("clear")
+            display_favourites
+            prompt = TTY::Prompt.new
+            favourites_prompt = prompt.select('What would you like to do?') do |menu|
+                menu.choice 'Delete Code From Favourites'
+                menu.choice 'Back to Main Menu'
+                menu.choice 'Exit'
+            end
+            case favourites_prompt
+            when "Delete Code From Favourites"
+                puts "Please type the Title of the code you wish to delete"
+                favourite_delete_input = gets.chomp
+                if favourite_delete_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+                    warning_pastel = Pastel.new
+                    puts warning_pastel.yellow("Are you sure you want to remove #{favourite_delete_input.capitalize} from your favourites list?")
+                    prompt = TTY::Prompt.new
+                    favourite_remove_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
+                        menu.choice 'Yes'
+                        menu.choice 'No'
+                    end
+                    if favourite_remove_code_warning_prompt.downcase == "yes"
+                        removed_favourite = CSV.read("favourites.csv", headers:true)
+                        if removed_favourite.find { |row| row["title"] == favourite_delete_input.capitalize }
+                            removed_favourite.delete_if{ |row| row["title"] == favourite_delete_input.capitalize }
+                            CSV.open("favourites.csv", "w", headers:true) { |row| 
+                            row << ["title","description","code snippet"]
+                            removed_favourite.each { |favourite| row << favourite }
+                            }
+                            system("clear")
+                            success_pastel = Pastel.new
+                            puts success_pastel.green("#{favourite_delete_input.capitalize} Successfully Removed")
+                        else
+                            code_title_not_found
+                        end
+                    else favourite_remove_code_warning_prompt.downcase == "no"
+                        system("clear")
+                        puts "Returning you to Main Menu"
+                    end 
+                else
+                    invalid_title_name
+                end
+            when "Back To Main Menu"
+                system("clear")
+                next
+            when "Exit"
+                system("clear")
+                exit
+            end
+        when "Help"
+            puts 
+        when "Exit"
+            system("clear")
+            exit
+        end
     end
 end
-
-
-
