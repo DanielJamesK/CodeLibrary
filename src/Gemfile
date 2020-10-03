@@ -11,3 +11,5 @@ gem "tty", "~> 0.7.0"
 gem "tty-table", "~> 0.8.0"
 
 gem "pp", "~> 0.1.0"
+
+gem "pastel", "~> 0.7.2"

@@ -68,6 +68,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  pastel (~> 0.7.2)
   pp (~> 0.1.0)
   tty (~> 0.7.0)
   tty-table (~> 0.8.0)

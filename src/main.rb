@@ -1,6 +1,6 @@
 require 'tty-prompt'
 require 'tty-table'
-require 'json'
+require 'pastel'
 require 'csv'
 require 'pp'
 
@@ -115,7 +115,8 @@ def add_code
     puts "Valid characters include a-z A-Z ':|-"
     add_title_input = gets.chomp
     if add_title_input.match? /\A[a-zA-Z':|-]{1,20}\z/
-        puts "Are you sure you want to add #{add_title_input.capitalize} to the code library?"
+        warning_pastel = Pastel.new
+        puts warning_pastel.yellow("Are you sure you want to add #{add_title_input.capitalize} to the code library?")
         prompt = TTY::Prompt.new
         add_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
             menu.choice 'Yes'
@@ -134,24 +135,25 @@ def add_code
                         CSV.open(csv_option, "a") do |row|
                             row << [add_title_input.capitalize, add_description_input.capitalize, add_snippet_input]
                         end
-                    else
-                        puts "Error - Invalid Code Snippet"
+                        system("clear")
+                        success_pastel = Pastel.new
+                        puts success_pastel.green("#{add_title_input.capitalize} successfully added to the code library")
                         puts "Returning you to the Main Menu"
+                    else
+                        invalid_code_snippet
                     end
                 else
-                    puts "Error - Invalid Description"
-                    puts "Returning you to the Main Menu"
+                    invalid_description
                 end
             else
-                puts "Error - Invalid Title name"
-                puts "Returning you to the Main Menu"
+                invalid_title_name
             end
         else add_code_warning_prompt.downcase == "no"
+            system("clear")
             puts "Returning you to the Main Menu"
         end
     else
-        puts "Error - Invalid Title name"
-        puts "Returning you to the Main Menu"
+        invalid_title_name
     end
 end
 
@@ -170,7 +172,8 @@ def remove_code
     puts "Please type the Title of the code you wish to delete"
     delete_input = gets.chomp
     if delete_input.match? /\A[a-zA-Z':|-]{1,20}\z/
-        puts "Are you sure you want to remove #{delete_input.capitalize} from the code library?"
+        warning_pastel = Pastel.new
+        puts warning_pastel.yellow("Are you sure you want to remove #{delete_input.capitalize} from the code library?")
         prompt = TTY::Prompt.new
         remove_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
             menu.choice 'Yes'
@@ -185,17 +188,18 @@ def remove_code
                 removed_code.each { |code| row << code }
                 }
                 system("clear")
-                puts "#{delete_input.capitalize} Successfully Removed"
-            else
-                puts "Error - Code title not found"
+                success_pastel = Pastel.new
+                puts success_pastel.green("#{delete_input.capitalize} successfully Removed")
                 puts "Returning you to the Main Menu"
+            else
+                code_title_not_found
             end
         else remove_code_warning_prompt.downcase == "no"
+            system("clear")
             puts "Returning you to main menu"
         end
     else
-        puts "Error - Invalid Title name"
-        puts "Returning you to the Main Menu"
+        invalid_title_name
     end
 end
 
@@ -214,7 +218,8 @@ def edit_code
     puts "Please type the Title of the code you wish to edit"
     edit_input = gets.chomp
     if edit_input.match? /\A[a-zA-Z':|-]{1,20}\z/
-        puts "Are you sure you want to edit #{edit_input}?"
+        warning_pastel = Pastel.new
+        puts warning_pastel.yellow("Are you sure you want to edit #{edit_input.capitalize}?")
         prompt = TTY::Prompt.new
         edit_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
             menu.choice 'Yes'
@@ -243,28 +248,28 @@ def edit_code
                             row << ["title","description","code snippet"]
                             edited_code.each { |code| row << code }
                             }
-                        else
-                            puts "Error - Invalid Code Snippet"
+                            system("clear")
+                            success_pastel = Pastel.new
+                            puts success_pastel.green("#{edit_input.capitalize} successfully edited")
                             puts "Returning you to the Main Menu"
+                        else
+                            invalid_code_snippet
                         end
                     else
-                        puts "Error - Invalid Description"
-                        puts "Returning you to the Main Menu"
+                        invalid_description
                     end
                 else
-                    puts "Error - Invalid Title name"
-                    puts "Returning you to the Main Menu"
+                    invalid_title_name
                 end
             else 
-                puts "Error - Code title not found"
-                puts "Returning you to the Main Menu"
+                code_title_not_found
             end
         else edit_code_warning_prompt.downcase == "no"
+            system("clear")
             puts "Returning you to the Main Menu"
         end 
     else
-        puts "Error - Invalid Title name"
-        puts "Returning you to the Main Menu"
+        invalid_title_name
     end
 end
 
@@ -296,16 +301,16 @@ def display_search
                 favourites_add.each { |favourite| row << favourite }
                 }
                 system("clear")
-                puts "#{favourites_input.capitalize} Successfully added to favourites library"
+                success_pastel = Pastel.new
+                puts success_pastel.green("#{favourites_input.capitalize} successfully added to favourites library")
             else
-                puts "Error - Code title not found"
-                puts "Returning you to the Main Menu"
+                code_title_not_found
             end
         else
-            puts "Error - Invalid Title name"
-            puts "Returning you to the Main Menu"
+            invalid_title_name
         end
     else add_code_prompt.downcase == "no"
+        system("clear")
         puts "Returning you to the Main Menu"
     end
 end
@@ -325,6 +330,30 @@ def csv_options
         system("clear")
         exit
     end
+end
+
+def invalid_title_name
+    invalid_title_pastel = Pastel.new
+    puts invalid_title_pastel.red("Error - Invalid Title name")
+    puts "Returning you to the Main Menu"
+end
+
+def invalid_description
+    invalid_description_pastel = Pastel.new
+    puts invalid_description_pastel.red("Error - Invalid Description")
+    puts "Returning you to the Main Menu"
+end
+
+def invalid_code_snippet
+    invalid_code_snippet_pastel = Pastel.new
+    puts invalid_code_snippet_pastel.red("Error - Invalid Code Snippet")
+    puts "Returning you to the Main Menu"
+end
+
+def code_title_not_found
+    code_title_pastel = Pastel.new
+    puts code_title_pastel.red("Error - Code title not found")
+    puts "Returning you to the Main Menu"
 end
 
 loop do
@@ -377,6 +406,7 @@ loop do
                         puts "Returning you to the Main Menu"
                     end
                 else favourite_remove_code_warning_prompt.downcase == "no"
+                    system("clear")
                     puts "Returning you to Main Menu"
                 end 
             else
