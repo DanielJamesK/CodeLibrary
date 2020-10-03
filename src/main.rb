@@ -151,21 +151,24 @@ def edit_code
     puts "Please type the Title of the code you wish to edit"
     edit_input = gets.chomp
     edited_code = CSV.read(csv_option, headers:true)
-    edited_code.delete_if do |row| 
-    row["title"] == edit_input
+    if edited_code.find { |row| row["title"] == edit_input}
+        edited_code.delete_if do |row| 
+        row["title"] == edit_input
+        end
+        puts "Please enter new Title for the code"
+        edit_title_input = gets.chomp
+        puts "Please enter a new Description for the code"
+        edit_description_input = gets.chomp
+        puts "Please enter a new code snippet"
+        edit_snippet_input = gets.chomp
+        edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
+        
+        CSV.open(csv_option, "w", headers:true) { |row| 
+        row << ["title","description","code snippet"]
+        edited_code.each { |code| row << code }
+        }
+    else puts "Code title not found"
     end
-    puts "Please enter new Title for the code"
-    edit_title_input = gets.chomp
-    puts "Please enter a new Description for the code"
-    edit_description_input = gets.chomp
-    puts "Please enter a new code snippet"
-    edit_snippet_input = gets.chomp
-    edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
-    
-    CSV.open(csv_option, "w", headers:true) { |row| 
-    row << ["title","description","code snippet"]
-    edited_code.each { |code| row << code }
-    }
 end
 
 def display_search
