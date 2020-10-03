@@ -1,8 +1,8 @@
 require 'tty-prompt'
 require 'tty-table'
+require 'tty-font'
 require 'pastel'
 require 'csv'
-require 'pp'
 
 # class User
 
@@ -60,6 +60,9 @@ end
 
 def display_images
     system("clear")
+    images_font = TTY::Font.new(:doom)
+    images_title = Pastel.new
+    puts images_title.cyan.bold(images_font.write("IMAGES", letter_spacing: 2))
     images = []
     CSV.foreach("image_manipulation.csv", headers: true).select { |row| 
         images << [row["title"], row["description"], row["code snippet"]]
@@ -70,6 +73,9 @@ end
 
 def display_text
     system("clear")
+    text_font = TTY::Font.new(:doom)
+    text_title = Pastel.new
+    puts text_title.cyan.bold(text_font.write("TEXT", letter_spacing: 2))
     text = []
     CSV.foreach("text_manipulation.csv", headers: true).select { |row| 
     text << [row["title"], row["description"], row["code snippet"]]
@@ -80,6 +86,9 @@ end
 
 def display_flexbox
     system("clear")
+    flexbox_font = TTY::Font.new(:doom)
+    flexbox_title = Pastel.new
+    puts flexbox_title.cyan.bold(flexbox_font.write("FLEXBOX", letter_spacing: 2))
     flexbox = []
     CSV.foreach("flexbox.csv", headers: true).select { |row| 
     flexbox << [row["title"], row["description"], row["code snippet"]]
@@ -90,6 +99,9 @@ end
 
 def display_grid
     system("clear")
+    grid_font = TTY::Font.new(:doom)
+    grid_title = Pastel.new
+    puts grid_title.cyan.bold(grid_font.write("GRID", letter_spacing: 2))
     grid = []
     CSV.foreach("grid.csv", headers: true).select { |row| 
         grid << [row["title"], row["description"], row["code snippet"]]
@@ -100,6 +112,9 @@ end
 
 def display_favourites
     system("clear")
+    favourites_font = TTY::Font.new(:doom)
+    favourites_title = Pastel.new
+    puts favourites_title.cyan.bold(favourites_font.write("FAVOURITES", letter_spacing: 2))
     favourites = []
     CSV.foreach("favourites.csv", headers: true).select { |row| 
     favourites << [row["title"], row["description"], row["code snippet"]]
@@ -109,6 +124,9 @@ def display_favourites
 end
 
 def add_code
+    add_code_font = TTY::Font.new(:doom)
+    add_code_title = Pastel.new
+    puts add_code_title.cyan.bold(add_code_font.write("ADD CODE", letter_spacing: 2))
     csv_option = 
     csv_options
     puts "Please enter a Title for the code"
@@ -278,6 +296,23 @@ def display_search
     csv_options
     system("clear")
     display_code = []
+    if csv_option == "image_manipulation.csv"
+        images_font = TTY::Font.new(:doom)
+        images_title = Pastel.new
+        puts images_title.cyan.bold(images_font.write("IMAGES", letter_spacing: 2))
+    elsif csv_option == "text_manipulation.csv"
+        text_font = TTY::Font.new(:doom)
+        text_title = Pastel.new
+        puts text_title.cyan.bold(text_font.write("TEXT", letter_spacing: 2))
+    elsif csv_option == "flexbox.csv"
+        flexbox_font = TTY::Font.new(:doom)
+        flexbox_title = Pastel.new
+        puts flexbox_title.cyan.bold(flexbox_font.write("FLEXBOX", letter_spacing: 2))
+    else csv_option == "grid.csv"
+        grid_font = TTY::Font.new(:doom)
+        grid_title = Pastel.new
+        puts grid_title.cyan.bold(grid_font.write("GRID", letter_spacing: 2))
+    end
     CSV.foreach(csv_option, headers: true).select { |row| 
         display_code << [row["title"], row["description"], row["code snippet"]]
     }
@@ -355,6 +390,18 @@ def code_title_not_found
     puts code_title_pastel.red("Error - Code title not found")
     puts "Returning you to the Main Menu"
 end
+
+title_line_one_font = TTY::Font.new(:doom)
+welcome_title = Pastel.new
+puts welcome_title.cyan.bold(title_line_one_font.write("WELCOME", letter_spacing: 2))
+
+title_line_two_font = TTY::Font.new(:doom)
+welcome_title = Pastel.new
+puts welcome_title.cyan.bold(title_line_two_font.write("TO THE", letter_spacing: 2))
+
+title_line_three_font = TTY::Font.new(:doom)
+welcome_title = Pastel.new
+puts welcome_title.cyan.bold(title_line_three_font.write("CODE LIBRARY", letter_spacing: 2))
 
 loop do
     case display_options_menu
