@@ -166,7 +166,7 @@ def edit_code
     end
     puts "Please type the Title of the code you wish to edit"
     edit_input = gets.chomp
-    if edit_input.match? /\A[a-zA-Z'-]*\z/ and edit_input.length > 0
+    if edit_input.match? /\A[a-zA-Z':|-]{1,20}\z/
         puts "Are you sure you want to edit #{edit_input}?"
         prompt = TTY::Prompt.new
         edit_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
@@ -180,26 +180,38 @@ def edit_code
                 row["title"] == edit_input
                 end
                 puts "Please enter new Title for the code - max 20 characters"
+                puts "Valid characters include a-z A-Z ':|-"
                 edit_title_input = gets.chomp
-                if edit_title_input.match? /\A[a-zA-Z'-]*\z/ and edit_title_input.length > 0 and edit_title_input.length < 20
+                if edit_title_input.match? /\A[a-zA-Z':|-]{1,20}\z/
                     puts "Please enter a new Description for the code - max 40 characters"
+                    puts "Valid characters include a-z A-Z ':|-"
                     edit_description_input = gets.chomp
-                    if edit_description_input.length > 40
-                        puts "Description must be shorter than 40 characters"
-                    else
-                        puts "Please enter a new code snippet"
+                    if edit_description_input.match? /\A[a-zA-Z':|-]{1,40}\z/
+                        puts "Please enter a new code snippet - max 40 characters"
+                        puts "Valid characters include a-z A-Z ':|-"
                         edit_snippet_input = gets.chomp
-                        edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
-                        
-                        CSV.open(csv_option, "w", headers:true) { |row| 
-                        row << ["title","description","code snippet"]
-                        edited_code.each { |code| row << code }
-                    }
+                        if edit_snippet_input.match? /\A[a-zA-Z':|-]{1,40}\z/
+                            edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
+                            
+                            CSV.open(csv_option, "w", headers:true) { |row| 
+                            row << ["title","description","code snippet"]
+                            edited_code.each { |code| row << code }
+                            }
+                        else
+                            puts "Invalid Code Snippet"
+                            puts "Returning you to the Main Menu"
+                        end
+                    else
+                        puts "Invalid Description"
+                        puts "Returning you to the Main Menu"
                     end
                 else
                     puts "Invalid Title name"
+                    puts "Returning you to the Main Menu"
                 end
-            else puts "Code title not found"
+            else 
+                puts "Code title not found"
+                puts "Returning you to the Main Menu"
             end
         else edit_code_warning_prompt.downcase == "no"
             puts "Returning you to the Main Menu"
