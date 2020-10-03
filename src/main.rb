@@ -174,10 +174,10 @@ def edit_code
             menu.choice 'No'
         end
         if edit_code_warning_prompt.downcase == "yes"
-        edited_code = CSV.read(csv_option, headers:true)
-            if edited_code.find { |row| row["title"] == edit_input }
+            edited_code = CSV.read(csv_option, headers:true)
+            if edited_code.find { |row| row["title"] == edit_input.capitalize }
                 edited_code.delete_if do |row| 
-                row["title"] == edit_input
+                row["title"] == edit_input.capitalize
                 end
                 puts "Please enter new Title for the code - max 20 characters"
                 puts "Valid characters include a-z A-Z ':|-"
@@ -191,8 +191,7 @@ def edit_code
                         puts "Valid characters include a-z A-Z ':|-"
                         edit_snippet_input = gets.chomp
                         if edit_snippet_input.match? /\A[a-zA-Z':|-]{1,40}\z/
-                            edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
-                            
+                            edited_code << [edit_title_input.capitalize, edit_description_input.capitalize, edit_snippet_input]
                             CSV.open(csv_option, "w", headers:true) { |row| 
                             row << ["title","description","code snippet"]
                             edited_code.each { |code| row << code }
