@@ -103,13 +103,46 @@ def add_code
     csv_option = 
     csv_options
     puts "Please enter a Title for the code"
-    a_input = gets.chomp
-    puts "Please enter a description of the code"
-    b_input = gets.chomp
-    puts "Please enter a code snippet"
-    c_input = gets.chomp
-    CSV.open(csv_option, "a") do |row|
-        row << [a_input, b_input, c_input]
+    puts "Valid characters include a-z A-Z ':|-"
+    add_title_input = gets.chomp
+    if add_title_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+        puts "Are you sure you want to add #{add_title_input.capitalize} to the code library?"
+        prompt = TTY::Prompt.new
+        add_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
+            menu.choice 'Yes'
+            menu.choice 'No'
+        end
+        if add_code_warning_prompt.downcase == "yes"
+            if add_title_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+                puts "Please enter a description of the code - max 40 characters"
+                puts "Valid characters include a-z A-Z ':|-"
+                add_description_input = gets.chomp
+                if add_description_input.match? /\A[a-zA-Z':|-]{1,40}\z/
+                    puts "Please enter a code snippet - max 40 characters"
+                    puts "Valid characters include a-z A-Z ':|-"
+                    add_snippet_input = gets.chomp
+                    if add_snippet_input.match? /\A[a-zA-Z':|-]{1,40}\z/
+                        CSV.open(csv_option, "a") do |row|
+                            row << [add_title_input.capitalize, add_description_input.capitalize, add_snippet_input]
+                        end
+                    else
+                        puts "Invalid Code Snippet"
+                        puts "Returning you to the Main Menu"
+                    end
+                else
+                    puts "Invalid Description"
+                    puts "Returning you to the Main Menu"
+                end
+            else
+                puts "Invalid Title name"
+                puts "Returning you to the Main Menu"
+            end
+        else add_code_warning_prompt.downcase == "no"
+            puts "Returning you to the Main Menu"
+        end
+    else
+        puts "Invalid Title name"
+        puts "Returning you to the Main Menu"
     end
 end
 
@@ -127,28 +160,34 @@ def remove_code
     end
     puts "Please type the Title of the code you wish to delete"
     delete_input = gets.chomp
-    puts "Are you sure you want to remove #{delete_input} from the code library?"
-    prompt = TTY::Prompt.new
-    remove_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
-        menu.choice 'Yes'
-        menu.choice 'No'
-    end
-    if remove_code_warning_prompt.downcase == "yes"
-        removed_code = CSV.read(csv_option, headers:true)
-        if removed_code.find { |row| row["title"] == delete_input }
-            removed_code.delete_if{ |row| row["title"] == delete_input }
-
-            CSV.open(csv_option, "w", headers:true) { |row| 
-            row << ["title","description","code snippet"]
-            removed_code.each { |code| row << code }
-            }
-            system("clear")
-            puts "#{delete_input} Successfully Removed"
-        else
-            puts "Code title not found"
+    if delete_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+        puts "Are you sure you want to remove #{delete_input.capitalize} from the code library?"
+        prompt = TTY::Prompt.new
+        remove_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
+            menu.choice 'Yes'
+            menu.choice 'No'
         end
+        if remove_code_warning_prompt.downcase == "yes"
+            removed_code = CSV.read(csv_option, headers:true)
+            if removed_code.find { |row| row["title"] == delete_input.capitalize }
+                removed_code.delete_if{ |row| row["title"] == delete_input.capitalize }
+
+                CSV.open(csv_option, "w", headers:true) { |row| 
+                row << ["title","description","code snippet"]
+                removed_code.each { |code| row << code }
+                }
+                system("clear")
+                puts "#{delete_input.capitalize} Successfully Removed"
+            else
+                puts "Code title not found"
+                puts "Returning you to main menu"
+            end
         else remove_code_warning_prompt.downcase == "no"
-        puts "Returning you to main menu"
+            puts "Returning you to main menu"
+        end
+    else
+        puts "Invalid Title name"
+        puts "Returning you to the Main Menu"
     end
 end
 
