@@ -166,24 +166,47 @@ def edit_code
     end
     puts "Please type the Title of the code you wish to edit"
     edit_input = gets.chomp
-    edited_code = CSV.read(csv_option, headers:true)
-    if edited_code.find { |row| row["title"] == edit_input }
-        edited_code.delete_if do |row| 
-        row["title"] == edit_input
+    if edit_input.match? /\A[a-zA-Z'-]*\z/ and edit_input.length > 0
+        puts "Are you sure you want to edit #{edit_input}?"
+        prompt = TTY::Prompt.new
+        edit_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
+            menu.choice 'Yes'
+            menu.choice 'No'
         end
-        puts "Please enter new Title for the code"
-        edit_title_input = gets.chomp
-        puts "Please enter a new Description for the code"
-        edit_description_input = gets.chomp
-        puts "Please enter a new code snippet"
-        edit_snippet_input = gets.chomp
-        edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
-        
-        CSV.open(csv_option, "w", headers:true) { |row| 
-        row << ["title","description","code snippet"]
-        edited_code.each { |code| row << code }
-        }
-    else puts "Code title not found"
+        if edit_code_warning_prompt.downcase == "yes"
+        edited_code = CSV.read(csv_option, headers:true)
+            if edited_code.find { |row| row["title"] == edit_input }
+                edited_code.delete_if do |row| 
+                row["title"] == edit_input
+                end
+                puts "Please enter new Title for the code - max 20 characters"
+                edit_title_input = gets.chomp
+                if edit_title_input.match? /\A[a-zA-Z'-]*\z/ and edit_title_input.length > 0 and edit_title_input.length < 20
+                    puts "Please enter a new Description for the code - max 40 characters"
+                    edit_description_input = gets.chomp
+                    if edit_description_input.length > 40
+                        puts "Description must be shorter than 40 characters"
+                    else
+                        puts "Please enter a new code snippet"
+                        edit_snippet_input = gets.chomp
+                        edited_code << [edit_title_input, edit_description_input, edit_snippet_input]
+                        
+                        CSV.open(csv_option, "w", headers:true) { |row| 
+                        row << ["title","description","code snippet"]
+                        edited_code.each { |code| row << code }
+                    }
+                    end
+                else
+                    puts "Invalid Title name"
+                end
+            else puts "Code title not found"
+            end
+        else edit_code_warning_prompt.downcase == "no"
+            puts "Returning you to the Main Menu"
+        end 
+    else
+        puts "Invalid Title name"
+        puts "Returning you to the Main Menu"
     end
 end
 
