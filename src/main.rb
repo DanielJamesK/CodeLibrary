@@ -99,6 +99,16 @@ def display_grid
     puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+def display_favourites
+    system("clear")
+    favourites = []
+    CSV.foreach("favourites.csv", headers: true).select { |row| 
+    favourites << [row["title"], row["description"], row["code snippet"]]
+    }
+    favourites_table = TTY::Table.new(["Title","Description","Code Snippet"], favourites)
+    puts favourites_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+end
+
 def add_code
     csv_option = 
     csv_options
@@ -171,7 +181,6 @@ def remove_code
             removed_code = CSV.read(csv_option, headers:true)
             if removed_code.find { |row| row["title"] == delete_input.capitalize }
                 removed_code.delete_if{ |row| row["title"] == delete_input.capitalize }
-
                 CSV.open(csv_option, "w", headers:true) { |row| 
                 row << ["title","description","code snippet"]
                 removed_code.each { |code| row << code }
@@ -321,29 +330,47 @@ loop do
         display_search 
     when "Favourites"
         system("clear")
+        display_favourites
         prompt = TTY::Prompt.new
         favourites_prompt = prompt.select('What would you like to do?') do |menu|
-            menu.choice 'Display Favourite Code'
             menu.choice 'Delete Code From Favourites'
+            menu.choice 'Exit'
         end
-        if favourites_prompt.downcase == "display favourite code"
-            system("clear")
-            favourites = []
-            CSV.foreach("favourites.csv", headers: true).select { |row| 
-                favourites << [row["title"], row["description"], row["code snippet"]]
-            }
-            favourites_table = TTY::Table.new(["Title","Description","Code Snippet"], favourites)
-            puts favourites_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
-        else favourites_prompt.downcase == "delete code from favourites"
+        case favourites_prompt
+        when "Delete Code From Favourites"
             puts "Please type the Title of the code you wish to delete"
             favourite_delete_input = gets.chomp
-            removed_favourite = CSV.read("favourites.csv", headers:true)
-            removed_favourite.delete_if{ |row| row["title"] == favourite_delete_input }
-
-            CSV.open("favourites.csv", "w", headers:true) { |row| 
-            row << ["title","description","code snippet"]
-            removed_favourite.each { |image| row << image }
-            }
+            if favourite_delete_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+                puts "Are you sure you want to remove #{favourite_delete_input.capitalize} from your favourites list?"
+                prompt = TTY::Prompt.new
+                favourite_remove_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
+                    menu.choice 'Yes'
+                    menu.choice 'No'
+                end
+                if favourite_remove_code_warning_prompt.downcase == "yes"
+                    removed_favourite = CSV.read("favourites.csv", headers:true)
+                    if removed_favourite.find { |row| row["title"] == favourite_delete_input.capitalize }
+                        removed_favourite.delete_if{ |row| row["title"] == favourite_delete_input.capitalize }
+                        CSV.open("favourites.csv", "w", headers:true) { |row| 
+                        row << ["title","description","code snippet"]
+                        removed_favourite.each { |favourite| row << favourite }
+                        }
+                        system("clear")
+                        puts "#{favourite_delete_input.capitalize} Successfully Removed"
+                    else
+                        puts "Code title not found"
+                        puts "Returning you to main menu"
+                    end
+                else favourite_remove_code_warning_prompt.downcase == "no"
+                    puts "Returning you to Main Menu"
+                end 
+            else
+                puts "Invalid Title name"
+                puts "Returning you to the Main Menu"
+            end
+        when "Exit"
+            system("clear")
+            exit
         end
     when "Exit"
         system("clear")
