@@ -54,7 +54,6 @@ def code_catelogue_menu
         menu.choice 'Text Manipulation'
         menu.choice 'Flexbox'
         menu.choice 'Grid'
-        #menu.choice 'Back To Main Menu'
         menu.choice 'Exit'
     end
 end
@@ -136,22 +135,22 @@ def add_code
                             row << [add_title_input.capitalize, add_description_input.capitalize, add_snippet_input]
                         end
                     else
-                        puts "Invalid Code Snippet"
+                        puts "Error - Invalid Code Snippet"
                         puts "Returning you to the Main Menu"
                     end
                 else
-                    puts "Invalid Description"
+                    puts "Error - Invalid Description"
                     puts "Returning you to the Main Menu"
                 end
             else
-                puts "Invalid Title name"
+                puts "Error - Invalid Title name"
                 puts "Returning you to the Main Menu"
             end
         else add_code_warning_prompt.downcase == "no"
             puts "Returning you to the Main Menu"
         end
     else
-        puts "Invalid Title name"
+        puts "Error - Invalid Title name"
         puts "Returning you to the Main Menu"
     end
 end
@@ -188,14 +187,14 @@ def remove_code
                 system("clear")
                 puts "#{delete_input.capitalize} Successfully Removed"
             else
-                puts "Code title not found"
-                puts "Returning you to main menu"
+                puts "Error - Code title not found"
+                puts "Returning you to the Main Menu"
             end
         else remove_code_warning_prompt.downcase == "no"
             puts "Returning you to main menu"
         end
     else
-        puts "Invalid Title name"
+        puts "Error - Invalid Title name"
         puts "Returning you to the Main Menu"
     end
 end
@@ -245,26 +244,26 @@ def edit_code
                             edited_code.each { |code| row << code }
                             }
                         else
-                            puts "Invalid Code Snippet"
+                            puts "Error - Invalid Code Snippet"
                             puts "Returning you to the Main Menu"
                         end
                     else
-                        puts "Invalid Description"
+                        puts "Error - Invalid Description"
                         puts "Returning you to the Main Menu"
                     end
                 else
-                    puts "Invalid Title name"
+                    puts "Error - Invalid Title name"
                     puts "Returning you to the Main Menu"
                 end
             else 
-                puts "Code title not found"
+                puts "Error - Code title not found"
                 puts "Returning you to the Main Menu"
             end
         else edit_code_warning_prompt.downcase == "no"
             puts "Returning you to the Main Menu"
         end 
     else
-        puts "Invalid Title name"
+        puts "Error - Invalid Title name"
         puts "Returning you to the Main Menu"
     end
 end
@@ -287,12 +286,27 @@ def display_search
     end
     if add_code_prompt.downcase == "yes"
         puts "Please enter the title of the code you would like to add"
+        puts "Valid characters include a-z A-Z ':|-"
         favourites_input = gets.chomp
-        favourites_add = CSV.read(csv_option, headers:true)
-        favourites_add.delete_if{ |row| row["title"] != favourites_input } 
-        CSV.open("favourites.csv", "a", headers:true) { |row| 
-        favourites_add.each { |favourite| row << favourite }
-        }
+        if favourites_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+            favourites_add = CSV.read(csv_option, headers:true)
+            if favourites_add.find { |row| row["title"] == favourites_input.capitalize }
+                favourites_add.delete_if{ |row| row["title"] != favourites_input.capitalize } 
+                CSV.open("favourites.csv", "a", headers:true) { |row| 
+                favourites_add.each { |favourite| row << favourite }
+                }
+                system("clear")
+                puts "#{favourites_input.capitalize} Successfully added to favourites library"
+            else
+                puts "Error - Code title not found"
+                puts "Returning you to the Main Menu"
+            end
+        else
+            puts "Error - Invalid Title name"
+            puts "Returning you to the Main Menu"
+        end
+    else add_code_prompt.downcase == "no"
+        puts "Returning you to the Main Menu"
     end
 end
 
@@ -334,6 +348,7 @@ loop do
         prompt = TTY::Prompt.new
         favourites_prompt = prompt.select('What would you like to do?') do |menu|
             menu.choice 'Delete Code From Favourites'
+            menu.choice 'Back to Main Menu'
             menu.choice 'Exit'
         end
         case favourites_prompt
@@ -358,16 +373,19 @@ loop do
                         system("clear")
                         puts "#{favourite_delete_input.capitalize} Successfully Removed"
                     else
-                        puts "Code title not found"
-                        puts "Returning you to main menu"
+                        puts "Error - Code title not found"
+                        puts "Returning you to the Main Menu"
                     end
                 else favourite_remove_code_warning_prompt.downcase == "no"
                     puts "Returning you to Main Menu"
                 end 
             else
-                puts "Invalid Title name"
+                puts "Error - Invalid Title name"
                 puts "Returning you to the Main Menu"
             end
+        when "Back To Main Menu"
+            system("clear")
+            next
         when "Exit"
             system("clear")
             exit

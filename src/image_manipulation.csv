@@ -5,3 +5,4 @@ Responsive Image,Changes the images size depending on the screen size,width: 100
 Image Border,Defines the borders attributes,border: 5px solid black
 Opacity,The quality of lacking transparency,opacity: 0.5
 A,A,a
+X,X,x
