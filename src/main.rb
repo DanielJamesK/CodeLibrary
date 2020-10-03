@@ -127,13 +127,29 @@ def remove_code
     end
     puts "Please type the Title of the code you wish to delete"
     delete_input = gets.chomp
-    removed_code = CSV.read(csv_option, headers:true)
-    removed_code.delete_if{ |row| row["title"] == delete_input }
+    puts "Are you sure you want to remove #{delete_input} from the code library?"
+    prompt = TTY::Prompt.new
+    remove_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
+        menu.choice 'Yes'
+        menu.choice 'No'
+    end
+    if remove_code_warning_prompt.downcase == "yes"
+        removed_code = CSV.read(csv_option, headers:true)
+        if removed_code.find { |row| row["title"] == delete_input }
+            removed_code.delete_if{ |row| row["title"] == delete_input }
 
-    CSV.open(csv_option, "w", headers:true) { |row| 
-    row << ["title","description","code snippet"]
-    removed_code.each { |code| row << code }
-    }
+            CSV.open(csv_option, "w", headers:true) { |row| 
+            row << ["title","description","code snippet"]
+            removed_code.each { |code| row << code }
+            }
+            system("clear")
+            puts "#{delete_input} Successfully Removed"
+        else
+            puts "Code title not found"
+        end
+        else remove_code_warning_prompt.downcase == "no"
+        puts "Returning you to main menu"
+    end
 end
 
 def edit_code
@@ -151,7 +167,7 @@ def edit_code
     puts "Please type the Title of the code you wish to edit"
     edit_input = gets.chomp
     edited_code = CSV.read(csv_option, headers:true)
-    if edited_code.find { |row| row["title"] == edit_input}
+    if edited_code.find { |row| row["title"] == edit_input }
         edited_code.delete_if do |row| 
         row["title"] == edit_input
         end
