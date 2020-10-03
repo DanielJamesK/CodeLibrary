@@ -3,28 +3,6 @@ require 'tty-table'
 require 'tty-font'
 require 'pastel'
 require 'csv'
-require 'rspec/autorun'
-
-class User
-
-    attr_reader :username, :password
-    def initialize(username, password)
-        @username = username
-        @password = password
-    end
-end 
-
-class GeneralUser < User
-    def initialize(username, password)
-        super(username, password)
-    end
-end 
-
-class AdminUser < User
-    def initialize(username, password)
-        super(username, password)
-    end
-end
 
 def display_options_menu
     prompt = TTY::Prompt.new
@@ -401,11 +379,6 @@ def code_title_not_found
     puts code_title_pastel.red("Error - Code title not found")
     puts "Returning you to the Main Menu"
 end
-
-list_of_users = [    
-    GeneralUser.new("Guest", "password"),
-    AdminUser.new("Admin", "password")
-]
 
 title_line_one_font = TTY::Font.new(:doom)
 welcome_title = Pastel.new
