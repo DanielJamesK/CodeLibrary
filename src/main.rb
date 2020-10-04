@@ -276,6 +276,35 @@ def edit_code
     end
 end
 
+def display_admin_search
+    csv_option = 
+    csv_options
+    system("clear")
+    display_code = []
+    if csv_option == "image_manipulation.csv"
+        images_font = TTY::Font.new(:doom)
+        images_title = Pastel.new
+        puts images_title.cyan.bold(images_font.write("IMAGES", letter_spacing: 2))
+    elsif csv_option == "text_manipulation.csv"
+        text_font = TTY::Font.new(:doom)
+        text_title = Pastel.new
+        puts text_title.cyan.bold(text_font.write("TEXT", letter_spacing: 2))
+    elsif csv_option == "flexbox.csv"
+        flexbox_font = TTY::Font.new(:doom)
+        flexbox_title = Pastel.new
+        puts flexbox_title.cyan.bold(flexbox_font.write("FLEXBOX", letter_spacing: 2))
+    else csv_option == "grid.csv"
+        grid_font = TTY::Font.new(:doom)
+        grid_title = Pastel.new
+        puts grid_title.cyan.bold(grid_font.write("GRID", letter_spacing: 2))
+    end
+    CSV.foreach(csv_option, headers: true).select { |row| 
+        display_code << [row["title"], row["description"], row["code snippet"]]
+    }
+    display_code_table = TTY::Table.new(["Title","Description","Code Snippet"], display_code)
+    puts display_code_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
+end
+
 def display_search
     csv_option = 
     csv_options
@@ -410,16 +439,62 @@ if login_options.downcase == "admin"
             system("clear")
             edit_code
         when "Search"
-            display_search 
+            display_admin_search 
         when "Help"
-            puts 
+            system("clear")
+            help_font = TTY::Font.new(:doom)
+            help_title = Pastel.new
+            puts  help_title.cyan.bold( help_font.write("HELP", letter_spacing: 2))
+            puts "\n\n"
+            puts "Welcome to the Code Library. The Code Library is a resource that allows the user to search for and save helpful code snippets, to assist them on their coding journeys."
+            puts "\n"
+            help_admin_add_code_font = TTY::Font.new(:straight)
+            help_admin_add_code = Pastel.new
+            puts  help_admin_add_code.yellow.bold( help_admin_add_code_font.write("ADD CODE", letter_spacing: 2))
+            puts "\n"
+            puts "To Add Code to the library, select Add Code from the Main Menu. Next select the category you would like to add to, then input a valid Title, Description and Code Snippet for the code you are trying to add, if all the inputs are valid entries, you will be displayed a success message"
+            success_pastel = Pastel.new
+            puts success_pastel.green("Success! Code added to the Code Library")
+            puts "\n"
+            puts "If the entries are not valid, you will be displayed an error"
+            error_pastel = Pastel.new
+            puts error_pastel.red("Error - Invalid Input")
+            puts "\n"
+            help_admin_edit_code_font = TTY::Font.new(:straight)
+            help_admin_edit_code = Pastel.new
+            puts  help_admin_edit_code.yellow.bold( help_admin_edit_code_font.write("EDIT CODE", letter_spacing: 2))
+            puts "\n"
+            puts "To Edit Code in the code library, select Edit Code from the Main Menu. Next select the category the code is in that you would like to edit. Once you have selected the category, enter the Title of the code you want to edit, and the enter a new Title, Description and Code Snippet. If all the inputs are valid entries, you will be displayed a success message"
+            puts success_pastel.green("Successfully edited code!")
+            puts "\n"
+            puts "If the entries are not valid, you will be displayed an error"
+            error_pastel = Pastel.new
+            puts error_pastel.red("Error - Invalid Input")
+            puts "\n"
+            help_admin_remove_code_font = TTY::Font.new(:straight)
+            help_admin_remove_code = Pastel.new
+            puts  help_admin_remove_code.yellow.bold( help_admin_remove_code_font.write("REMOVE CODE", letter_spacing: 2))
+            puts "\n"
+            puts "To Remove Code from the code library, select Remove Code from the Main Menu. Next select the category you would like to remove code  from, then input the Title of the code you are trying to remove. If the input is a valid entry, you will be displayed a success message"
+            success_pastel = Pastel.new
+            puts success_pastel.green("Success! Code removed from the code library")
+            puts "\n"
+            puts "If the entry is not valid, you will be displayed an error"
+            error_pastel = Pastel.new
+            puts error_pastel.red("Error - Invalid Input")
+            puts "\n"
+            help_admin_search_font = TTY::Font.new(:straight)
+            help_admin_search = Pastel.new
+            puts  help_admin_search.yellow.bold( help_admin_search_font.write("SEARCH", letter_spacing: 2))
+            puts "\n"
+            puts "To Search for Code, select the Search option from the Main Menu. Once selected, it will prompt you with categories of code you can search, simply select one to search its code."
         when "Exit"
             system("clear")
             exit
         end
     end
 else login_options.downcase == "guest"
-# General User Search Options
+# Guest Search Options
     loop do
         case display_guest_options_menu
         when "Search"
@@ -485,7 +560,7 @@ else login_options.downcase == "guest"
             help_search = Pastel.new
             puts  help_search.yellow.bold( help_search_font.write("SEARCH", letter_spacing: 2))
             puts "\n"
-            puts "To Search for Code, select the Search function from the Main Menu. Once selected, it will prompt you with categories of code you can search."
+            puts "To Search for Code, select the Search option from the Main Menu. Once selected, it will prompt you with categories of code you can search, simply select one to search its code."
             puts "Once you have finished searching a category, you will be prompted whether or not you would like to add any of the code snippets to your favourites library."
             puts "\n"
             help_add_font = TTY::Font.new(:straight)
