@@ -119,48 +119,44 @@ def add_code
     csv_option = 
     csv_options
     puts "Please enter a Title for the code"
-    puts "Valid characters include a-z A-Z ':|-"
+    puts "Valid characters include a-z A-Z _':|-"
     add_title_input = gets.chomp
-    if add_title_input.match? /\A[a-zA-Z':|-]{1,20}\z/
-        warning_pastel = Pastel.new
-        puts warning_pastel.yellow("Are you sure you want to add #{add_title_input.capitalize} to the code library?")
-        prompt = TTY::Prompt.new
-        add_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
-            menu.choice 'Yes'
-            menu.choice 'No'
-        end
-        if add_code_warning_prompt.downcase == "yes"
-            if add_title_input.match? /\A[a-zA-Z':|-]{1,20}\z/
-                puts "Please enter a description of the code - max 40 characters"
+    warning_pastel = Pastel.new
+    puts warning_pastel.yellow("Are you sure you want to add #{add_title_input.capitalize} to the code library?")
+    prompt = TTY::Prompt.new
+    add_code_warning_prompt = prompt.select('Please select an answer:') do |menu|
+        menu.choice 'Yes'
+        menu.choice 'No'
+    end
+    if add_code_warning_prompt.downcase == "yes"
+        if add_title_input.match? /\A[ a-zA-Z_':|-]{1,20}\z/
+            puts "Please enter a description of the code - max 40 characters"
+            puts "Valid characters include a-z A-Z ':|-"
+            add_description_input = gets.chomp
+            if add_description_input.match? /\A[ a-zA-Z1-9':|-]{1,40}\z/
+                puts "Please enter a code snippet - max 40 characters"
                 puts "Valid characters include a-z A-Z ':|-"
-                add_description_input = gets.chomp
-                if add_description_input.match? /\A[a-zA-Z':|-]{1,40}\z/
-                    puts "Please enter a code snippet - max 40 characters"
-                    puts "Valid characters include a-z A-Z ':|-"
-                    add_snippet_input = gets.chomp
-                    if add_snippet_input.match? /\A[a-zA-Z':|-]{1,40}\z/
-                        CSV.open(csv_option, "a") do |row|
-                            row << [add_title_input.capitalize, add_description_input.capitalize, add_snippet_input]
-                        end
-                        system("clear")
-                        success_pastel = Pastel.new
-                        puts success_pastel.green("#{add_title_input.capitalize} successfully added to the code library")
-                        puts "Returning you to the Main Menu"
-                    else
-                        invalid_code_snippet
+                add_snippet_input = gets.chomp
+                if add_snippet_input.match? /\A[ a-zA-Z1-9':|-]{1,40}\z/
+                    CSV.open(csv_option, "a") do |row|
+                        row << [add_title_input.capitalize, add_description_input.capitalize, add_snippet_input]
                     end
+                    system("clear")
+                    success_pastel = Pastel.new
+                    puts success_pastel.green("#{add_title_input.capitalize} successfully added to the code library")
+                    puts "Returning you to the Main Menu"
                 else
-                    invalid_description
+                    invalid_code_snippet
                 end
             else
-                invalid_title_name
+                invalid_description
             end
-        else add_code_warning_prompt.downcase == "no"
-            system("clear")
-            puts "Returning you to the Main Menu"
+        else
+            invalid_title_name
         end
-    else
-        invalid_title_name
+    else add_code_warning_prompt.downcase == "no"
+        system("clear")
+        puts "Returning you to the Main Menu"
     end
 end
 
@@ -185,7 +181,7 @@ def remove_code
     end
     puts "Please type the Title of the code you wish to delete"
     delete_input = gets.chomp
-    if delete_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+    if delete_input.match? /\A[ a-zA-Z':|-]{1,20}\z/
         warning_pastel = Pastel.new
         puts warning_pastel.yellow("Are you sure you want to remove #{delete_input.capitalize} from the code library?")
         prompt = TTY::Prompt.new
@@ -238,7 +234,7 @@ def edit_code
     end
     puts "Please type the Title of the code you wish to edit"
     edit_input = gets.chomp
-    if edit_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+    if edit_input.match? /\A[ a-zA-Z':|-]{1,20}\z/
         warning_pastel = Pastel.new
         puts warning_pastel.yellow("Are you sure you want to edit #{edit_input.capitalize}?")
         prompt = TTY::Prompt.new
@@ -255,15 +251,15 @@ def edit_code
                 puts "Please enter new Title for the code - max 20 characters"
                 puts "Valid characters include a-z A-Z ':|-"
                 edit_title_input = gets.chomp
-                if edit_title_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+                if edit_title_input.match? /\A[ a-zA-Z1-9':|-]{1,20}\z/
                     puts "Please enter a new Description for the code - max 40 characters"
                     puts "Valid characters include a-z A-Z ':|-"
                     edit_description_input = gets.chomp
-                    if edit_description_input.match? /\A[a-zA-Z':|-]{1,40}\z/
+                    if edit_description_input.match? /\A[ a-zA-Z1-9':|-]{1,40}\z/
                         puts "Please enter a new code snippet - max 40 characters"
                         puts "Valid characters include a-z A-Z ':|-"
                         edit_snippet_input = gets.chomp
-                        if edit_snippet_input.match? /\A[a-zA-Z':|-]{1,40}\z/
+                        if edit_snippet_input.match? /\A[ a-zA-Z1-9':|-]{1,40}\z/
                             edited_code << [edit_title_input.capitalize, edit_description_input.capitalize, edit_snippet_input]
                             CSV.open(csv_option, "w", headers:true) { |row| 
                             row << ["title","description","code snippet"]
@@ -362,7 +358,7 @@ def display_search
         puts "Please enter the title of the code you would like to add"
         puts "Valid characters include a-z A-Z ':|-"
         favourites_input = gets.chomp
-        if favourites_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+        if favourites_input.match? /\A[ a-zA-Z':|-]{1,20}\z/
             favourites_add = CSV.read(csv_option, headers:true)
             if favourites_add.find { |row| row["title"] == favourites_input.capitalize }
                 favourites_add.delete_if{ |row| row["title"] != favourites_input.capitalize } 
@@ -557,7 +553,7 @@ elsif login_options.downcase == "guest"
             when "Delete Code From Favourites"
                 puts "Please type the Title of the code you wish to delete"
                 favourite_delete_input = gets.chomp
-                if favourite_delete_input.match? /\A[a-zA-Z':|-]{1,20}\z/
+                if favourite_delete_input.match? /\A[ a-zA-Z':|-]{1,20}\z/
                     warning_pastel = Pastel.new
                     puts warning_pastel.yellow("Are you sure you want to remove #{favourite_delete_input.capitalize} from your favourites list?")
                     prompt = TTY::Prompt.new
