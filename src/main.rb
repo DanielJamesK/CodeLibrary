@@ -553,7 +553,6 @@ elsif login_options.downcase == "guest"
             when "Delete Code From Favourites"
                 puts "Please type the Title of the code you wish to delete"
                 favourite_delete_input = gets.chomp
-                if favourite_delete_input.match? /\A[ a-zA-Z':|-]{1,20}\z/
                     warning_pastel = Pastel.new
                     puts warning_pastel.yellow("Are you sure you want to remove #{favourite_delete_input.capitalize} from your favourites list?")
                     prompt = TTY::Prompt.new
@@ -562,26 +561,27 @@ elsif login_options.downcase == "guest"
                         menu.choice 'No'
                     end
                     if favourite_remove_code_warning_prompt.downcase == "yes"
-                        removed_favourite = CSV.read("favourites.csv", headers:true)
-                        if removed_favourite.find { |row| row["title"] == favourite_delete_input.capitalize }
-                            removed_favourite.delete_if{ |row| row["title"] == favourite_delete_input.capitalize }
-                            CSV.open("favourites.csv", "w", headers:true) { |row| 
-                            row << ["title","description","code snippet"]
-                            removed_favourite.each { |favourite| row << favourite }
-                            }
-                            system("clear")
-                            success_pastel = Pastel.new
-                            puts success_pastel.green("#{favourite_delete_input.capitalize} Successfully Removed")
+                        if favourite_delete_input.match? /\A[ a-zA-Z':|-]{1,20}\z/
+                            removed_favourite = CSV.read("favourites.csv", headers:true)
+                            if removed_favourite.find { |row| row["title"] == favourite_delete_input.capitalize }
+                                removed_favourite.delete_if{ |row| row["title"] == favourite_delete_input.capitalize }
+                                CSV.open("favourites.csv", "w", headers:true) { |row| 
+                                row << ["title","description","code snippet"]
+                                removed_favourite.each { |favourite| row << favourite }
+                                }
+                                system("clear")
+                                success_pastel = Pastel.new
+                                puts success_pastel.green("#{favourite_delete_input.capitalize} Successfully Removed")
+                            else
+                                code_title_not_found
+                            end
                         else
-                            code_title_not_found
+                            invalid_title_name
                         end
                     else favourite_remove_code_warning_prompt.downcase == "no"
                         system("clear")
                         puts "Returning you to Main Menu"
                     end 
-                else
-                    invalid_title_name
-                end
             when "Back To Main Menu"
                 system("clear")
                 next
