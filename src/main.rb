@@ -3,7 +3,9 @@ require 'tty-table'
 require 'tty-font'
 require 'pastel'
 require 'csv'
+require 'optparse'
 
+# Admin User Main Menu Options
 def display_options_menu
     prompt = TTY::Prompt.new
     display_options_menu = prompt.select('Please select an option:') do |menu|   
@@ -16,6 +18,7 @@ def display_options_menu
     end
 end
 
+# Guest User Main Menu Options
 def display_guest_options_menu
     prompt = TTY::Prompt.new
     display_options_menu = prompt.select('Please select an option:') do |menu|   
@@ -26,6 +29,7 @@ def display_guest_options_menu
     end
 end
 
+# Code categories
 def code_catelogue_menu
     prompt = TTY::Prompt.new
     search_options = prompt.select('Please select a category:') do |menu|
@@ -37,6 +41,7 @@ def code_catelogue_menu
     end
 end
 
+# Displays the Images Table
 def display_images
     system("clear")
     images_font = TTY::Font.new(:doom)
@@ -50,6 +55,7 @@ def display_images
     puts image_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+# Displays the Text Table
 def display_text
     system("clear")
     text_font = TTY::Font.new(:doom)
@@ -63,6 +69,7 @@ def display_text
     puts text_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+# Displays the Flexbox Table
 def display_flexbox
     system("clear")
     flexbox_font = TTY::Font.new(:doom)
@@ -76,6 +83,7 @@ def display_flexbox
     puts flexbox_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+# Displays the Grid Table
 def display_grid
     system("clear")
     grid_font = TTY::Font.new(:doom)
@@ -89,6 +97,7 @@ def display_grid
     puts grid_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+# Displays the Favourites Table
 def display_favourites
     system("clear")
     favourites_font = TTY::Font.new(:doom)
@@ -102,6 +111,7 @@ def display_favourites
     puts favourites_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+# Add code feature that takes input from the user and adds it to the relevant CSV file
 def add_code
     add_code_font = TTY::Font.new(:doom)
     add_code_title = Pastel.new
@@ -154,6 +164,10 @@ def add_code
     end
 end
 
+# Remove code feature that takes input from the user
+# Creates an array populated by the relevant CSV file
+# Checks to see if the users input is in the array, if it is it then deletes the row containing the users input, pushes the remaining data back into the array and then writes that data to the relevant CSV file.
+# If it doesn't exist, displays an error
 def remove_code
     remove_code_font = TTY::Font.new(:doom)
     remove_code_title = Pastel.new
@@ -203,6 +217,10 @@ def remove_code
     end
 end
 
+# Edit code feature, user selects a category
+# Inputs the title of the code they want to edit
+# Checks to see if the code exists, if it does, user enters new code title, description and code snippet
+# If code title doesn't exist, displays an error
 def edit_code
     edit_code_font = TTY::Font.new(:doom)
     edit_code_title = Pastel.new
@@ -276,6 +294,7 @@ def edit_code
     end
 end
 
+# Displays the table depending on the users menu selection
 def display_admin_search
     csv_option = 
     csv_options
@@ -305,6 +324,7 @@ def display_admin_search
     puts display_code_table.render(:unicode, multiline: true, alignments: [:left, :left], padding:[1,1])
 end
 
+# Guest user search, displays the code table depending on the menu selection and prompts the user whether they would like to add and of the code to their favourites CSV
 def display_search
     csv_option = 
     csv_options
@@ -364,6 +384,7 @@ def display_search
     end
 end
 
+# Defines the csv_option variable depending on the users menu selection
 def csv_options
     csv_option = 
     case code_catelogue_menu
@@ -381,6 +402,7 @@ def csv_options
     end
 end
 
+# Invalid title error
 def invalid_title_name
     system("clear")
     invalid_title_pastel = Pastel.new
@@ -388,6 +410,7 @@ def invalid_title_name
     puts "Returning you to the Main Menu"
 end
 
+# Invalid description error
 def invalid_description
     system("clear")
     invalid_description_pastel = Pastel.new
@@ -395,6 +418,7 @@ def invalid_description
     puts "Returning you to the Main Menu"
 end
 
+# Invalid code snippet error
 def invalid_code_snippet
     system("clear")
     invalid_code_snippet_pastel = Pastel.new
@@ -402,13 +426,13 @@ def invalid_code_snippet
     puts "Returning you to the Main Menu"
 end
 
+# Invalid code title error
 def code_title_not_found
     system("clear")
     code_title_pastel = Pastel.new
     puts code_title_pastel.red("Error - Code title not found")
     puts "Returning you to the Main Menu"
 end
-require 'optparse'
 
 @options = {}
 
@@ -420,6 +444,8 @@ end
 op.parse!
 p @options
 system("clear")
+
+# Welcome message for Main Screen
 title_line_one_font = TTY::Font.new(:doom)
 welcome_title = Pastel.new
 puts welcome_title.cyan.bold(title_line_one_font.write("WELCOME", letter_spacing: 2))
@@ -431,12 +457,16 @@ puts welcome_title.cyan.bold(title_line_two_font.write("TO THE", letter_spacing:
 title_line_three_font = TTY::Font.new(:doom)
 welcome_title = Pastel.new
 puts welcome_title.cyan.bold(title_line_three_font.write("CODE LIBRARY", letter_spacing: 2))
+
+# Main screen login prompt
 prompt = TTY::Prompt.new
 login_options = prompt.select('Which user would you like to continue as?') do |menu|
     menu.choice 'Admin'
     menu.choice 'Guest'
     menu.choice 'Exit'
 end
+
+# If the user selects Admin from the main screen menu, run this code
 if login_options.downcase == "admin"
     loop do
         case display_options_menu
@@ -505,12 +535,15 @@ if login_options.downcase == "admin"
             exit
         end
     end
+
+# If the user selects Guest from the main screen menu, run this code
 elsif login_options.downcase == "guest"
-# Guest Search Options
     loop do
         case display_guest_options_menu
         when "Search"
             display_search 
+            
+# Favourites section allows user to display the favourites they have added to their favourites CSV file, and also delete and code from the file they dont want anymore
         when "Favourites"
             system("clear")
             display_favourites
