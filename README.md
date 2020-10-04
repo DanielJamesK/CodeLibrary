@@ -67,3 +67,7 @@ Any errors the user might experience will be displayed using error handling. For
 ## Link to Trello Board
 
 https://trello.com/b/qiwUFT2d
+
+# Testing
+
+![Manual feature tests](./docs/Testing.png "Testing")
