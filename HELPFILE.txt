@@ -1,0 +1,5 @@
+Welcome to the Code Library help file.
+
+Before you begin, this application has some dependencies. You must ensure you have ruby installed on your computer. The application requires the gems tty-prompt, tty-table, tty-font, and pastel. These gems will be installed once you execute the runprogram.sh script.
+
+To open the application you must first run the script entitled runprogram.sh in the terminal. The script is located in the DanielKurz_T1A3 directory. If you aren't already in this directory you can change into it by typing cd DanielKurz_T1A3 into the terminal. To run the script, type the command ./runprogram.sh in the terminal and press enter. After you run the script, it will install the neccessary gems and open the application in the terminal. 

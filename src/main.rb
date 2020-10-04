@@ -408,7 +408,18 @@ def code_title_not_found
     puts code_title_pastel.red("Error - Code title not found")
     puts "Returning you to the Main Menu"
 end
+require 'optparse'
 
+@options = {}
+
+op = OptionParser.new do |opts|
+    opts.on("-a", "--adminuser", "If you would like to Add, Edit, or Remove and Code from the library, please continue as Admin.")
+    opts.on("-g", "--guestuser", "If you would like to just Search and Add code to your favourites, please continue as Guest")
+end
+
+op.parse!
+p @options
+system("clear")
 title_line_one_font = TTY::Font.new(:doom)
 welcome_title = Pastel.new
 puts welcome_title.cyan.bold(title_line_one_font.write("WELCOME", letter_spacing: 2))
@@ -420,11 +431,11 @@ puts welcome_title.cyan.bold(title_line_two_font.write("TO THE", letter_spacing:
 title_line_three_font = TTY::Font.new(:doom)
 welcome_title = Pastel.new
 puts welcome_title.cyan.bold(title_line_three_font.write("CODE LIBRARY", letter_spacing: 2))
-
 prompt = TTY::Prompt.new
 login_options = prompt.select('Which user would you like to continue as?') do |menu|
     menu.choice 'Admin'
     menu.choice 'Guest'
+    menu.choice 'Exit'
 end
 if login_options.downcase == "admin"
     loop do
@@ -490,10 +501,11 @@ if login_options.downcase == "admin"
             puts "To Search for Code, select the Search option from the Main Menu. Once selected, it will prompt you with categories of code you can search, simply select one to search its code."
         when "Exit"
             system("clear")
+            puts "Goodbye!"
             exit
         end
     end
-else login_options.downcase == "guest"
+elsif login_options.downcase == "guest"
 # Guest Search Options
     loop do
         case display_guest_options_menu
@@ -546,6 +558,7 @@ else login_options.downcase == "guest"
                 next
             when "Exit"
                 system("clear")
+                puts "Goodbye!"
                 exit
             end
         when "Help"
@@ -602,7 +615,12 @@ else login_options.downcase == "guest"
             puts "\n"
         when "Exit"
             system("clear")
+            puts "Goodbye!"
             exit
         end
     end
+else login_options.downcase == "exit"
+    system("clear")
+    puts "Goodbye!"
+    exit
 end
