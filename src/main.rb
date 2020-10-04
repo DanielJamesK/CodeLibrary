@@ -474,7 +474,57 @@ else login_options.downcase == "guest"
                 exit
             end
         when "Help"
-            puts 
+            system("clear")
+            help_font = TTY::Font.new(:doom)
+            help_title = Pastel.new
+            puts  help_title.cyan.bold( help_font.write("HELP", letter_spacing: 2))
+            puts "\n\n"
+            puts "Welcome to the Code Library. The Code Library is a resource that allows the user to search for and save helpful code snippets, to assist them on their coding journeys."
+            puts "\n"
+            help_search_font = TTY::Font.new(:straight)
+            help_search = Pastel.new
+            puts  help_search.yellow.bold( help_search_font.write("SEARCH", letter_spacing: 2))
+            puts "\n"
+            puts "To Search for Code, select the Search function from the Main Menu. Once selected, it will prompt you with categories of code you can search."
+            puts "Once you have finished searching a category, you will be prompted whether or not you would like to add any of the code snippets to your favourites library."
+            puts "\n"
+            help_add_font = TTY::Font.new(:straight)
+            help_add = Pastel.new
+            puts  help_add.yellow.bold( help_add_font.write("ADD", letter_spacing: 2))
+            puts "\n"
+            puts "If you would like to add code to your favourites, select yes from the prompt menu, and then enter the Title of the code, for example - Opacity"
+            success_pastel = Pastel.new
+            puts success_pastel.green("Success! You have added code to your favourites!")
+            puts "\n"
+            puts "If the code title you add doesn't match one from the code library, you will get an error message and have to re-add your desired code."
+            error_pastel = Pastel.new
+            puts error_pastel.red("Error - Code Title not found")
+            puts "\n"
+            view_favourites_help_font = TTY::Font.new(:straight)
+            view_favourites_help = Pastel.new
+            puts  view_favourites_help.yellow.bold( view_favourites_help_font.write("VIEW FAVOURITES", letter_spacing: 2))
+            puts "\n"
+            puts "To view the code you have added to your favourites, simply select the Favourites menu option from the Main Menu"
+            puts "\n"
+            delete_help_font = TTY::Font.new(:straight)
+            delete_help = Pastel.new
+            puts  delete_help.yellow.bold( delete_help_font.write("DELETE", letter_spacing: 2))
+            puts "\n"
+            puts "If you would like to delete code that you have added to your favourites, firstly select Favourites from the Main Menu. After you have done that, select Delete Code From Favourites. Once you have done that, enter the Title of the code you wish to delete."
+            puts "If the Title you entered matches a code title in your favourites, it will delete it."
+            success_pastel = Pastel.new
+            puts success_pastel.green("Code successfully removed!")
+            puts "\n"
+            puts "If it doesn't match, you will get an error"
+            error_pastel = Pastel.new
+            puts error_pastel.red("Error - Code Title not found")
+            puts "\n"
+            enjoy_help_font = TTY::Font.new(:straight)
+            enjoy_help = Pastel.new
+            puts  enjoy_help.yellow.bold( enjoy_help_font.write("ENJOY", letter_spacing: 2))
+            puts "\n"
+            puts "That's everything you should need to know to successfully navigate your way around the code library, ENJOY!"
+            puts "\n"
         when "Exit"
             system("clear")
             exit
